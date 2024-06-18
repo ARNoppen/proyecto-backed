@@ -1,0 +1,14 @@
+{
+    "name": "proyecto_node",
+    "version": "1.0.0",
+    "description": "Mi proyecto Backed",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "moment": "^2.30.1"
+    }
+}
