@@ -1,4 +1,6 @@
-// hacer una funcion identifique cual es mayor
+// hacer una funcion para elegir la operación entre 2 numeros
+
+const nombre2 = "Axel";
 
 
 const suma = (a, b) => {
@@ -24,4 +26,4 @@ const mostrarNombres = productos.map((element) => element.nombre);
 console.log(mostrarNombres);
 
 
-
+//

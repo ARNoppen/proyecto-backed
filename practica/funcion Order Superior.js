@@ -9,8 +9,9 @@ const productoDisponible = [
 
 
 // el forEach sirve para recorrer objeto/array
-productoDisponible.forEach( (item) => {
-    console.log(item.nombre);
+                        //elemento //indice(pocicion)
+productoDisponible.forEach( (item, index) => {
+    console.log(item.nombre + index);
     alert("Actualmente están disponibles los siguientes productos: (" + item.nombre + ")");
 
 } )
@@ -35,7 +36,7 @@ console.log(encontrarCategoriaLog);
 
 // el metodo map sirve para crear un nuevo array con los elementos del array original o objeto que teníamos, según la operacion 
 //que le indiquemos por parametro 
-const mostrarNombres = productoDisponible.map((arrayNombres) => arrayNombres.nombre )
+const mostrarNombres = productoDisponible.map((arrayNombres) => arrayNombres.nombre ).map()
 console.log(mostrarNombres)
 alert("Ahora podemos ver los nombres del objeto " + mostrarNombres)
 
