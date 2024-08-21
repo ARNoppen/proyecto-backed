@@ -64,7 +64,9 @@ export default class ProductManager {
 
     deleteProduct(id){
         const productIndex = this.products.findIndex((product) => product.id === id)
-        if(productIndex < 0 ){
+        console.log("Esta es la posición de mi producto a eliminar: ",productIndex);
+        
+        if(productIndex === -1 ){
             return null
         }
 

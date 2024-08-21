@@ -90,7 +90,7 @@ router.post("/", async (req,res)=>{
 
 //PUT
 router.put("/:pid", async (req,res)=>{
-    try {
+    try {               //capturamos el id que coloquen en la URL
         const productId = req.params.pid
         const updateProduct = await productManager.updateProduct(productId, req.body);
         if(updateProduct){
@@ -111,6 +111,7 @@ router.delete("/:pid", async (req,res)=>{
     try {
         const productId = req.params.pid;
         const deleteProduct = await productManager.deleteProduct(productId)
+        console.log("Este es mi producto a eliminar",deleteProduct)
         if(deleteProduct){
             res.json(deleteProduct)
         }else{
