@@ -21,6 +21,8 @@ router.get(("/prueba"), (req,res)=>{
 });
 */
 
+
+
 //GET
 router.get("/", async (req,res)=>{
     try {            // usamos operador ternario "?" si "req.query.limit" es true se va a ejecutar lo que sigue. si es false se va a ejecutar lo que sigue despues de : en este caso colocamos undefined
@@ -37,6 +39,9 @@ router.get("/", async (req,res)=>{
     }
     
 });
+
+
+
 
 //GET
 router.get("/:pid", async (req,res)=>{
@@ -59,6 +64,10 @@ router.get("/:pid", async (req,res)=>{
     
 });
 
+
+
+
+
 //POST  
 router.post("/", async (req,res)=>{
     try {                                                       //thumbnails es la url de la imagen del producto
@@ -74,23 +83,15 @@ router.post("/", async (req,res)=>{
         console.log(error);
     }
 
-    let product = req.body;
-    console.log(product);
-
-    if(!product.nombre || !product.categoria || !product.precio){
-        return res.status(400).send({status:"error", msg:"valores incompletos"});
-    }
-
-    products.push(product);
-    console.log(products);
-
-    return res.send({status:"succes", msg:"producto creado"}); 
 });
+
+
+
 
 //PUT
 router.put("/:pid", async (req,res)=>{
     try {
-        const productId = parseInt(req.params.pid)
+        const productId = req.params.pid
         const updateProduct = await productManager.updateProduct(productId, req.body);
         if(updateProduct){
             res.json(updateProduct)
@@ -102,10 +103,13 @@ router.put("/:pid", async (req,res)=>{
     }
 })
 
+
+
+
 //DELETE
 router.delete("/:pid", async (req,res)=>{
     try {
-        const productId = parseInt(req.params.pid);
+        const productId = req.params.pid;
         const deleteProduct = await productManager.deleteProduct(productId)
         if(deleteProduct){
             res.json(deleteProduct)
@@ -116,6 +120,9 @@ router.delete("/:pid", async (req,res)=>{
         console.log(error);
     }
 })
+
+
+
 
 
 //practicando Multer
@@ -132,7 +139,7 @@ prod.image = req.file.path;
 
 //validación
 if(!prod.nombre || !prod.categoria || !prod.precio){
-    return res.status(400).send({status:"error", msg:"valores incompletos"});
+    return res.status(400).send({status:"error", msg:"valores incompletos fila 135"});
 }
 
 products.push(prod);

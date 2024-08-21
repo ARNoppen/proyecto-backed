@@ -1,5 +1,5 @@
 import { json } from "express";
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import { v4 as uuid } from "uuid";
 
