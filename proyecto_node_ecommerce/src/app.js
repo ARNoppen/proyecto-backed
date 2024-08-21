@@ -9,7 +9,6 @@ import __dirname from "./utils.js";
 const app = express();
  
 
-
 //colocamos middleware a nivel aplicación (sirve para mostrarle predeterminadamente como va a trabajar en el código)
 //prepara la configuración del servidor para trabajar con archivos JSON
 app.use(express.json());
@@ -39,11 +38,8 @@ app.use(express.static(__dirname + "/public"))
 app.use("/api/products", productsRoutes)
 app.use("/api/carts", cartsRoutes)
 
-const PORT   = 8080;
-
-
-
-
+ 
+const PORT = 8080;
 
 // escucha el puerto que configuramos
                 //este callback es solo para mostrar por consola que se está corriendo el puerto
