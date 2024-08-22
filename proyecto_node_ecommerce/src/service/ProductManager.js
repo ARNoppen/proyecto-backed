@@ -24,7 +24,7 @@ export default class ProductManager {
     saveToFile(){
         fs.writeFile(productosFilePath, JSON.stringify(this.products, null, 2));
     }
-
+    
     getAllProducts(limit){
         if(limit){
             return  this.products.slice(0,limit)
@@ -49,7 +49,7 @@ export default class ProductManager {
 
     updateProduct(id, updateFields){
         const productIndex = this.products.findIndex((product) => product.id === id)
-        if(productIndex < 0 ){
+        if(productIndex === -1 ){
             return null
         }
         const updateProduct = {
@@ -75,4 +75,4 @@ export default class ProductManager {
         
         return deleteProduct[0];
     }
-}
+};
