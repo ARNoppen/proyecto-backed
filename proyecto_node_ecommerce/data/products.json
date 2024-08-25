@@ -1,0 +1,13 @@
+[
+  {
+    "id": "57ce7fed-16c2-450f-bf49-b3d6a1f05595",
+    "title": "Remera larga",
+    "description": "Remera manga larga",
+    "code": "REME02",
+    "price": 10000,
+    "stock": 5,
+    "category": "remeras",
+    "thumbnails": "",
+    "status": true
+  }
+]

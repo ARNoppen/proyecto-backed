@@ -1,5 +1,6 @@
 import { Router } from "express";   
 import CartManager from "../service/CartManager.js";
+import ProductManager from "../service/ProductManager.js";
 
 const router = Router();
 const cartManager = new CartManager();
@@ -7,8 +8,18 @@ const cartManager = new CartManager();
 
 
 //GET
-router.get("/", (req,res)=>{
-    res.send("En desarrollo");
+router.get("/:cid", async (req,res)=>{
+    try {
+        const cartId = req.params.cid;
+        const cart = await cartManager.getCart(cartId)
+        if(cart) {
+            res.json(cart)
+        }else{
+            res.status(404).json({error: "Producto no encontrado"});
+        }
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 //POST

@@ -28,6 +28,11 @@ export default class CartManager{
         fs.writeFile(carritosFilePath, JSON.stringify(this.carts, null, 2));
     }
 
+    
+    getCart(id){
+        return this.carts.find(elem => elem.id == id)
+    }
+
     addCart(){
         const newCart = {
             id: uuid(),
