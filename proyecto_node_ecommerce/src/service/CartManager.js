@@ -25,7 +25,7 @@ export default class CartManager{
     //metodos
 
     saveToFile(){
-        fs.writeFile(carritosFilePath, JSON.stringify(this.products, null, 2));
+        fs.writeFile(carritosFilePath, JSON.stringify(this.carts, null, 2));
     }
 
     addCart(){
