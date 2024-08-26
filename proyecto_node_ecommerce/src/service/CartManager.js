@@ -51,20 +51,27 @@ export default class CartManager{
             const cart = this.carts.find(cart => cart.id == cartId);
             //console.log("Este es el id de mi carrito correcto: ",cart);
             if (!cart){
-                throw new error("Carrito no encontrado")
+                console.log("Carrito no encontrado");
             }
-
-            const existingProduct = cart.product.find(elem => elem.product == productId);
-            
-            if (existingProduct) {
-                existingProduct.quantity++;
+            // confirmarmos que exista el producto en nuestro products.json (para que no puedan ingresar un id que no exista)
+            const existingProductToProductManager = productManagerToCarrito.products.find(elem => elem.id == productId )
+            if (existingProductToProductManager) {
+                //confirmamos que exista el producto en nuestro array product dentro del carrito (para que se sume en quantity si es que existe)
+                const existingProduct = cart.product.find(elem => elem.product == productId);
+                if (existingProduct) {
+                    existingProduct.quantity++;
+                }else{
+                    //si no existe lo sumamos al carrito
+                    cart.product.push({
+                        product : productId,
+                        quantity : 1
+                    })
+                }
+                this.saveToFile();
+                return cart;
             }else{
-                cart.product.push({
-                    product : productId,
-                    quantity : 1
-                })
+                console.log("no existe un id para ese producto");
+                
             }
-            this.saveToFile();
-            return cart;
         }
 };
