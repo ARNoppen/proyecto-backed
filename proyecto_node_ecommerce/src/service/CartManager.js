@@ -59,7 +59,6 @@ export default class CartManager{
             product : productId,
             quantity : 1
         };
-        
         //Accedemos al carrito especifico y luego al array product "cart.product" y pusheamos 
         cart.product.push(newProductToCart);
         
