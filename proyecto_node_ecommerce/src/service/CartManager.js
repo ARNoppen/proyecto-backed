@@ -8,7 +8,6 @@ import { error, log } from "console";
 const carritosFilePath = path.resolve("data", "carts.json");
 const productManagerToCarrito = new ProductManager();
 
-
 export default class CartManager{
     constructor(){
         this.carts = [],
@@ -31,7 +30,6 @@ export default class CartManager{
         fs.writeFile(carritosFilePath, JSON.stringify(this.carts, null, 2));
     }
 
-    
     getCart(id){
         return this.carts.find(elem => elem.id == id)
     }

@@ -15,14 +15,6 @@ router.use(function(req,res,next){
     next()
 })
 
-/*declaramos el Endpoint (ruta)
-router.get(("/prueba"), (req,res)=>{
-    res.send({status: "succes", msg:"probando JSON"});
-});
-*/
-
-
-
 //GET
 router.get("/", async (req,res)=>{
     try {            // usamos operador ternario "?" si "req.query.limit" es true se va a ejecutar lo que sigue. si es false se va a ejecutar lo que sigue despues de : en este caso colocamos undefined
@@ -39,9 +31,6 @@ router.get("/", async (req,res)=>{
     }
     
 });
-
-
-
 
 //GET
 router.get("/:pid", async (req,res)=>{
@@ -63,10 +52,6 @@ router.get("/:pid", async (req,res)=>{
     
 });
 
-
-
-
-
 //POST  
 router.post("/", async (req,res)=>{
     try {                                                       //thumbnails es la url de la imagen del producto
@@ -84,9 +69,6 @@ router.post("/", async (req,res)=>{
 
 });
 
-
-
-
 //PUT
 router.put("/:pid", async (req,res)=>{
     try {               //capturamos el id que coloquen en la URL
@@ -101,9 +83,6 @@ router.put("/:pid", async (req,res)=>{
         console.log(error);
     }
 })
-
-
-
 
 //DELETE
 router.delete("/:pid", async (req,res)=>{
@@ -120,8 +99,6 @@ router.delete("/:pid", async (req,res)=>{
         console.log(error);
     }
 })
-
-
 
 
 
@@ -148,7 +125,6 @@ console.log(prod);
 res.send({status:"succes", msg:"producto creado"}); 
 
 });
-
 
 
 export default router;

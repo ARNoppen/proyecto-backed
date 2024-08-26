@@ -5,8 +5,6 @@ import CartManager from "../service/CartManager.js";
 const router = Router();
 const cartManager = new CartManager();
 
-
-
 //GET
 router.get("/:cid", async (req,res)=>{
     try {
@@ -22,8 +20,6 @@ router.get("/:cid", async (req,res)=>{
     }
 });
 
-
-
 //POST
 router.post("/", async (req,res) => {
     try {
@@ -33,8 +29,6 @@ router.post("/", async (req,res) => {
         console.log(error);
     }
 })
-
-
 
 //POST
 router.post("/:cid/product/:pid", async (req,res) =>{
