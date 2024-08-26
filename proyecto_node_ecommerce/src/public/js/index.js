@@ -1,0 +1,1 @@
+alert("Bienvenidos a JS en la carpeta pulic")
