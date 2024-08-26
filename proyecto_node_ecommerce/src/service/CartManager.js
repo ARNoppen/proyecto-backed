@@ -47,26 +47,24 @@ export default class CartManager{
     }   
 
     addProductToCart(cartId, productId){
-        //para acceder a la propiedad product necesitamos encontrar el carrito especifico (lo cual le indicamos por id)
-        const cart = this.carts.find(cart => cart.id == cartId);
-        //console.log("Este es el id de mi carrito correcto: ",cart);
-        if (!cart){
-            throw new error("Carrito no encontrado")
+            //para acceder a la propiedad product necesitamos encontrar el carrito especifico (lo cual le indicamos por id)
+            const cart = this.carts.find(cart => cart.id == cartId);
+            //console.log("Este es el id de mi carrito correcto: ",cart);
+            if (!cart){
+                throw new error("Carrito no encontrado")
+            }
+
+            const existingProduct = cart.product.find(elem => elem.product == productId);
+            
+            if (existingProduct) {
+                existingProduct.quantity++;
+            }else{
+                cart.product.push({
+                    product : productId,
+                    quantity : 1
+                })
+            }
+            this.saveToFile();
+            return cart;
         }
-
-        //una vez que encontramos el carrito al cual acceder, colocamos el id del producto y cantidad inicializa en 1
-        const newProductToCart = {
-            product : productId,
-            quantity : 1
-        };
-        //Accedemos al carrito especifico y luego al array product "cart.product" y pusheamos 
-        cart.product.push(newProductToCart);
-        
-        this.saveToFile();
-        return newProductToCart;
-    }
-
-
-
-
 };

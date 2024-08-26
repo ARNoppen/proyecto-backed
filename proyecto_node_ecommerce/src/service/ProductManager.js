@@ -69,10 +69,8 @@ export default class ProductManager {
         if(productIndex === -1 ){
             return null
         }
-
         const deleteProduct = this.products.splice(productIndex, 1);
         this.saveToFile();
-        
         return deleteProduct[0];
     }
 };
