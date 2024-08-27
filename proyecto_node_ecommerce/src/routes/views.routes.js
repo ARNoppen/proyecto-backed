@@ -19,7 +19,7 @@ router.get("/food", (req,res)=>{
 
     res.render("index",{
         user: userData,
-        isAdmin: userData.role === "user",
+        isAdmin: userData.role === "admin",
         food: food,
         style: "index.css"
     })
