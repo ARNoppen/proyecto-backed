@@ -10,6 +10,7 @@ import viewRouter from "./routes/views.routes.js";
 
 //----declaramos express----
 const app = express();
+const PORT = process.env.PORT || 8080;
 
 //--------colocamos middleware a nivel aplicación (sirve para mostrarle predeterminadamente como va a trabajar en el código)------
 //prepara la configuración del servidor para trabajar con archivos JSON
@@ -48,10 +49,9 @@ app.use("/api/products", productsRoutes)
 app.use("/api/carts", cartsRoutes)
 app.use("/",viewRouter)
 
- 
 
 
-const PORT = process.env.PORT || 8080;
+
 // escucha el puerto que configuramos
                 //este callback es solo para mostrar por consola que se está corriendo el puerto
 const httpServer = app.listen((PORT), ()=>{
