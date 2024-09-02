@@ -1,0 +1,30 @@
+<div>
+    <h1>Bienvenido, en esta página vas a poder ingresar productos.</h1>
+    <h2>Nombre: <span id="myName"> </span></h2>
+
+
+    <div>
+        <p>
+            <input type="text" id="productBox" alt="Introduce un producto">
+        </p>
+
+        <button id="closeProductBox"> Cerrar </button>
+    </div>
+
+    {{!--Renderizar los productos--}}    
+    <div>
+        <p id="productsLog"></p>
+    </div>
+
+</div>
+
+
+
+
+
+{{!-- Traigo dos scripts que hacen referencia al uso de sockets--}}
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.handlebars"></script>
+
+{{!--Para poder usar Sweetalert--}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
