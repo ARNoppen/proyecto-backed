@@ -63,6 +63,8 @@ const socketServer = new Server(httpServer)
 
 
 
+
+
 const message = [];
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
