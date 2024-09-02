@@ -1,6 +1,6 @@
 <div>
-    <h1>Bienvenido, en esta página vas a poder ingresar productos.</h1>
-    <h2>Nombre: <span id="myName"> </span></h2>
+    <h1>En esta página vas a poder ingresar productos.</h1>
+    <h2>Bienvenido: <span id="myName"> </span></h2>
 
 
     <div>
@@ -20,11 +20,9 @@
 
 
 
-
+{{!--Para poder usar Sweetalert--}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 {{!-- Traigo dos scripts que hacen referencia al uso de sockets--}}
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/realTimeProducts.handlebars"></script>
-
-{{!--Para poder usar Sweetalert--}}
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/realTimeProducts.js"></script>

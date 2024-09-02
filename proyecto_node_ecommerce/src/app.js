@@ -51,7 +51,7 @@ app.use("/",viewRouter)
  
 
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 // escucha el puerto que configuramos
                 //este callback es solo para mostrar por consola que se está corriendo el puerto
 const httpServer = app.listen((PORT), ()=>{
@@ -61,8 +61,34 @@ const httpServer = app.listen((PORT), ()=>{
 //Abrimos canal de comunicació del lado del server
 const socketServer = new Server(httpServer)
 
+
+
+const message = [];
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
+    
+    //esto va a ver cualquier usuario que se conecte
+    socketServer.emit("messageLogs", message)
 
 
+    socket.on("message",data => {
+        message.push(data)
+        
+        socketServer.emit("messageLogs", message)
+    })
+
+
+    //hacemos broadcast del usuario que se conectó
+    socket.on("userConnect", data =>{
+        console.log(data);
+
+        socket.broadcast.emit("userConnect", data.user )
+    } )
+
+
+    socket.on("closeProduct", data => {
+        if(data.close === "closed"){
+            socket.disconnect()
+        }
+    })
 })
