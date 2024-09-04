@@ -65,18 +65,24 @@ const socketServer = new Server(httpServer)
 
 
 
+
+
+
+
+
+
 const message = [];
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
     
     //esto va a ver cualquier usuario que se conecte
-    socketServer.emit("messageLogs", message)
+    socketServer.emit("productLogs", message)
 
 
     socket.on("message",data => {
         message.push(data)
         
-        socketServer.emit("messageLogs", message)
+        socketServer.emit("productLogs", message)
     })
 
 

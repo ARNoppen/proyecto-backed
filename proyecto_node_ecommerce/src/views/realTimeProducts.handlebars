@@ -1,12 +1,27 @@
 <div>
-    <h1>En esta página vas a poder ingresar productos.</h1>
-    <h2>Bienvenido: <span id="myName"> </span></h2>
+    <h1>Bienvenido: <span id="myName"> </span></h1>
 
 
     <div>
-        <p>
-            <input type="text" id="productBox" alt="Introduce un producto">
-        </p>
+        <h2>Para ingresar un producto debe completar el siguiente formulario:</h2>
+        <form id="productBox">
+
+            <label for="title">Titulo: </label>
+            <input type="text" id="title" alt="Introduce un Titulo para el producto">
+            <label for="description">Descripción: </label>
+            <input type="text" id="description" alt="Introduce una Descripción para el producto">
+            <label for="code">Codigo: </label>
+            <input type="text" id="code" alt="Introduce un Códgio para el producto">
+            <label for="price">Precio: </label>
+            <input type="number" id="price" alt="Introduce un Precio para el producto">
+            <label for="stock">Stock: </label>
+            <input type="number" id="stock" alt="Introduce cuanto Stock tiene el producto">
+            <label for="category">Categoría: </label>
+            <input type="text" id="category" alt="Introduce una Categoría para el producto">
+
+            <input type="submit" id="createProduct">
+            
+        </form>
 
         <button id="closeProductBox"> Cerrar </button>
     </div>

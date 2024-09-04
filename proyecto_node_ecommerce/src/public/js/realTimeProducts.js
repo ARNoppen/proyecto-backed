@@ -29,32 +29,54 @@ Swal.fire({
 })
 
 
-// guardamos mensajes de los usuarios
-productBox.addEventListener("keyup", event => {
-    if(event.key === "Enter"){
-            if(productBox.value.trim().length > 0){
-                socket.emit("message", {user: user, message: productBox.value})
-                productBox.value = "";   
+// guardamos productos que ingresen los usuarios
+productBox.addEventListener("submit", event => {
+    event.preventDefault();
+
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const code = document.getElementById('code').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const stock = document.getElementById('stock').value.trim();
+    const category = document.getElementById('category').value.trim();
+
+            if(title.length > 0 && description.length > 0 && code.length > 0 && price.length > 0 && stock.length > 0 && category.length > 0){
+                const productData = {
+                    user: user,
+                    title: title,
+                    description: description,
+                    code: code,
+                    price: price,
+                    stock: stock,
+                    category: category
+                }
+
+                socket.emit("message", productData);
+
+                productBox.value = ""; 
             
         }else{
             Swal.fire({
                 icon:"warning",
                 title:"Alerta",
-                text:"Favor ingresar un mensaje"
+                text:"Debes completar todos los campos"
             })
         }
-    }
 })
 
 
 //escuchamos a todos los usuarios que estan conectados
-socket.on("messageLogs", data => {
+socket.on("productLogs", data => {
     const productsLog = document.getElementById("productsLog")
     let logs = ""
 
+    
+
     //iteración de data
     data.forEach(log => {
-        logs += `<b>${log.user}</b> dice: ${log.message} <br>`
+        logs += `<b>${log.user}</b> creó el siguiente producto: <br> Titulo: ${log.title} Descripción: ${log.description}  Código: ${log.code} Precio: ${log.price} Stock: ${log.stock} Categoría: ${log.category} <br>`
+        console.log(log.message);
+        
         productsLog.innerHTML = logs;
     });
 })
