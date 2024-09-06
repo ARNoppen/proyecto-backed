@@ -8,6 +8,10 @@ import cartsRoutes from "./routes/carts.routes.js"
 import __dirname from "./utils.js";
 import viewRouter from "./routes/views.routes.js";
 
+import ProductManager from "./service/ProductManager.js";
+
+const productManager = new ProductManager();
+
 //----declaramos express----
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -70,17 +74,28 @@ const socketServer = new Server(httpServer)
 
 
 
-const products = [];
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
     
     //esto va a ver cualquier usuario que se conecte
-    socket.emit("productLogs", products);
+    async function enviarProductos(){
+        try {
+            //envia todos los productos al cliente conectado
+             const products = await productManager.getAllProducts();
+             socket.emit("productLogs", products);
+             
+        } catch (error) {
+            console.log("Error en app.js al enviar productos a los usuarios conectados", error);
+            
+        }
+    }
+    enviarProductos();
+
 
     socket.on("products",data => {
-        products.push(data)
-        
-        socketServer.emit("productLogs", products)
+        const newProduct = productManager.addProduct(data);
+        socketServer.emit("productLogs", productManager.getAllProducts());
+
     })
 
 
@@ -99,6 +114,3 @@ socketServer.on("connection", socket => {
     })
 })
 
-
-
-export default products;

@@ -2,17 +2,22 @@
     <h1>Estos son los productos agregados hasta el momento:</h1>
 
     <ul id="productList">
-        {{#each products}}
-        <li>
-            <b>{{this.user}}</b> creó el siguiente producto: <br>
-            Titulo: {{this.title}} <br>
-            Descripción: {{this.description}} <br>
-            Código: {{this.code}} <br>
-            Precio: {{this.price}} <br>
-            Stock: {{this.stock}} <br>
-            Categoría: {{this.category}} <br><br>
-        </li>
-        {{/each}}
+        {{#if products.length}}
+            {{#each products}}
+                <li>
+                    <b>{{this.user}}</b> creó el siguiente producto: <br>
+                    Titulo: {{this.title}} <br>
+                    Descripción: {{this.description}} <br>
+                    Código: {{this.code}} <br>
+                    Precio: {{this.price}} <br>
+                    Stock: {{this.stock}} <br>
+                    Categoría: {{this.category}} <br><br>
+                </li>
+            {{/each}}
+            {{else}}
+                <p>No hay productos ingresados!</p>
+        {{/if}}
+
     </ul>
     
 </div>
