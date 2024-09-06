@@ -101,7 +101,6 @@ router.delete("/:pid", async (req,res)=>{
 })
 
 
-
 //practicando Multer
 router.post('/profile', uploader.single('file'), (req,res)=>{
     if(!req.file){
