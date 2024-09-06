@@ -70,19 +70,17 @@ const socketServer = new Server(httpServer)
 
 
 
-
-const message = [];
+const products = [];
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
     
     //esto va a ver cualquier usuario que se conecte
-    socketServer.emit("productLogs", message)
+    socket.emit("productLogs", products);
 
-
-    socket.on("message",data => {
-        message.push(data)
+    socket.on("products",data => {
+        products.push(data)
         
-        socketServer.emit("productLogs", message)
+        socketServer.emit("productLogs", products)
     })
 
 
@@ -100,3 +98,7 @@ socketServer.on("connection", socket => {
         }
     })
 })
+
+
+
+export default products;

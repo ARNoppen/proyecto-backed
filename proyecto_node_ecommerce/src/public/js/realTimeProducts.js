@@ -51,7 +51,7 @@ productBox.addEventListener("submit", event => {
                     category: category
                 }
 
-                socket.emit("message", productData);
+                socket.emit("products", productData);
 
                 productBox.value = ""; 
             
@@ -74,8 +74,13 @@ socket.on("productLogs", data => {
 
     //iteración de data
     data.forEach(log => {
-        logs += `<b>${log.user}</b> creó el siguiente producto: <br> Titulo: ${log.title} Descripción: ${log.description}  Código: ${log.code} Precio: ${log.price} Stock: ${log.stock} Categoría: ${log.category} <br>`
-        console.log(log.message);
+        logs += `<b>${log.user}</b> creó el siguiente producto: <br> 
+        Titulo: ${log.title} 
+        Descripción: ${log.description}  
+        Código: ${log.code} 
+        Precio: ${log.price} 
+        Stock: ${log.stock} 
+        Categoría: ${log.category} <br>`
         
         productsLog.innerHTML = logs;
     });
@@ -107,7 +112,7 @@ const closeProductBox = document.getElementById("closeProductBox")
 closeProductBox.addEventListener("click", event => {
     Swal.fire({
         icon: "succes",
-        title: "Gracias por usar este chat!! chau.",
+        title: "Gracias ingresar a la página!! chau.",
         color: "blue",
     })
 

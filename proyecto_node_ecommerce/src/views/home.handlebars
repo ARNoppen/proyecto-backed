@@ -1,6 +1,20 @@
 <div>
-    <h1>En desarrollo home</h1>
+    <h1>Estos son los productos agregados hasta el momento:</h1>
 
+    <ul id="productList">
+        {{#each products}}
+        <li>
+            <b>{{this.user}}</b> creó el siguiente producto: <br>
+            Titulo: {{this.title}} <br>
+            Descripción: {{this.description}} <br>
+            Código: {{this.code}} <br>
+            Precio: {{this.price}} <br>
+            Stock: {{this.stock}} <br>
+            Categoría: {{this.category}} <br><br>
+        </li>
+        {{/each}}
+    </ul>
+    
 </div>
 
 {{!-- Traigo dos scripts que hacen referencia al uso de sockets--}}
