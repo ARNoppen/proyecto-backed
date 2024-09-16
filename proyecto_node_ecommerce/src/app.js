@@ -2,13 +2,16 @@
 import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
+import mongoose from "mongoose";
 //import de nuestros otros directorios que ya exportamos
 import productsRoutes from "./routes/products.routes.js"
 import cartsRoutes from "./routes/carts.routes.js"
 import __dirname from "./utils.js";
 import viewRouter from "./routes/views.routes.js";
+import userRouter from "./routes/user.routes.js";
 
 import ProductManager from "./service/ProductManager.js";
+
 
 const productManager = new ProductManager();
 
@@ -51,7 +54,8 @@ app.set("view engine","handlebars");
 //----------Endpoints (Rutas) que tenemos configuradas en nuestro proyecto---------
 app.use("/api/products", productsRoutes)
 app.use("/api/carts", cartsRoutes)
-app.use("/",viewRouter)
+app.use("/", viewRouter)
+app.use("/api/users", userRouter)
 
 
 
@@ -72,7 +76,7 @@ const socketServer = new Server(httpServer)
 
 
 
-
+//--------------------------------- WEB SOCKET ---------------------------------
 
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
@@ -81,9 +85,9 @@ socketServer.on("connection", socket => {
     async function enviarProductos(){
         try {
             //envia todos los productos al cliente conectado
-             const products = await productManager.getAllProducts();
-             socket.emit("productLogs", products);
-             
+            const products = await productManager.getAllProducts();
+            socket.emit("productLogs", products);
+            
         } catch (error) {
             console.log("Error en app.js al enviar productos a los usuarios conectados", error);
             
@@ -114,3 +118,26 @@ socketServer.on("connection", socket => {
     })
 })
 
+
+
+
+
+
+
+
+//------------------------- Conectamos app con Mongo Atlas (base de datos en la nube) ------------------- 
+
+const uriDB = "mongodb+srv://aranuo23:AsZL0y3ZeDGLLV85@clusterproyecto.85xgv.mongodb.net/EcommerceAtlas?retryWrites=true&w=majority&appName=ClusterProyecto";
+
+const connectMongoDB = async () => {
+    try {
+        await mongoose.connect(uriDB)
+        console.log("Conectado con exito a Mongo Atlas usando Mongoose");
+        
+    } catch (error) {
+        console.log("No se pudo conectar a la Base de Datos usando Mongoose: ",error);
+        process.exit();
+    }
+}
+
+connectMongoDB()
