@@ -19,35 +19,29 @@ router.use(function(req,res,next){
 router.get("/", async (req,res)=>{
     try {            // usamos operador ternario "?" si "req.query.limit" es true se va a ejecutar lo que sigue. si es false se va a ejecutar lo que sigue despues de : en este caso colocamos undefined
         const limit = req.query.limit ? parseInt(req.query.limit): undefined;
-
         const products = await productManager.getAllProducts(limit)
-
         res.json(products)
-
-
     } catch (error) {
         console.log(error);
-        
+        res.status(500).json({ error: "Error interno del servidor (GET products.routes.js)" });
     }
-    
 });
 
-//GET
+//GET por ID
 router.get("/:pid", async (req,res)=>{
     try { 
         const productId = req.params.pid;
         const product = await productManager.getProductById(productId)
-
-    if(product){
-        res.json(product)
-    }else{
-        res.status(404).json({error: "Producto no encontrado"});
-    }
+        if(product){
+            res.json(product)
+        }else{
+            res.status(404).json({error: "Producto no encontrado"});
+        }
         
 
     } catch (error) {
         console.log(error);
-        
+        res.status(500).json({ error: "Error interno del servidor (GET por ID products.routes.js)" });
     }
     
 });
@@ -65,6 +59,7 @@ router.post("/", async (req,res)=>{
         res.status(201).json(newProduct);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: "Error interno del servidor (POST products.routes.js)" });
     }
 
 });
@@ -81,6 +76,7 @@ router.put("/:pid", async (req,res)=>{
         }
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: "Error interno del servidor (PUT products.routes.js)" });
     }
 })
 
@@ -97,6 +93,7 @@ router.delete("/:pid", async (req,res)=>{
         }
     } catch (error) {
         console.log(error);
+        res.status(500).json({ error: "Error interno del servidor (DELETE products.routes.js)" });
     }
 })
 

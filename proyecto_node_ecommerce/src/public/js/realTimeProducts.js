@@ -100,7 +100,7 @@ socket.on("userConnect", data =>{
         color: "blue",
         showConfirmButton: false,
         timer: 8000
-      });
+    });
 })
 
 

@@ -1,76 +1,69 @@
 import { json } from "express";
-import fs from "fs/promises";
-import path from "path";
-import { v4 as uuid } from "uuid";
+import { Product } from "../models/product.model.js";
 
-const productosFilePath = path.resolve("data", "products.json");
 
 export default class ProductManager {
     constructor(){
-        this.products = []
         this.init()
     }
 
     async init() {
         try {
-            const data = await fs.readFile(productosFilePath, "utf-8");
-            this.products = JSON.parse(data)
+            console.log("ProductManager conectado a la base de datos");
+            
         } catch (error) {
-            this.products = []
+            console.log("Error al conectar con la base de datos (ProductManager)", error);
+            
         }
     }
 
     //metodos
-    saveToFile(){
-        fs.writeFile(productosFilePath, JSON.stringify(this.products, null, 2));
-    }
     
-    getAllProducts(limit){
-        if(limit){
-            return  this.products.slice(0,limit)
+    async getAllProducts(limit) {
+        try {
+            const query = {};
+            const options = limit ? { limit: parseInt(limit) } : {};
+            return await Product.find(query, null, options).exec();
+        } catch (error) {
+            console.error('Error al obtener productos:', error);
+            throw error;
         }
-        return this.products
     }
 
-    getProductById(id){
-        return this.products.find((filtrar) => filtrar.id === id)
+    async getProductById(id) {
+        try {
+            return await Product.findById(id).exec();
+        } catch (error) {
+            console.error('Error al obtener producto:', error);
+            throw error;
+        }
+    }   
+
+    async addProduct(product) {
+        try {
+            const newProduct = new Product(product);
+            return await newProduct.save();
+        } catch (error) {
+            console.error('Error al agregar producto:', error);
+            throw error;
+        }
     }
 
-    addProduct(product){
-        const newProduct = {
-            id: uuid(),
-            ...product,
-            status: true
-        };
-        this.products.push(newProduct);
-        this.saveToFile();
-        return newProduct;
+    async updateProduct(id, updateFields) {
+        try {
+            return await Product.findByIdAndUpdate(id, updateFields, { new: true }).exec();
+        } catch (error) {
+            console.error('Error al actualizar producto:', error);
+            throw error;
+        }
     }
 
-    updateProduct(id, updateFields){
-        const productIndex = this.products.findIndex((product) => product.id === id)
-        if(productIndex === -1 ){
-            return null
+    async deleteProduct(id) {
+        try {
+            return await Product.findByIdAndDelete(id).exec();
+        } catch (error) {
+            console.error('Error al eliminar producto:', error);
+            throw error;
         }
-        const updateProduct = {
-            ...this.products[productIndex],
-            ...updateFields,
-            id: this.products[productIndex].id //aseeguramos que el indice no se actualice
-        }
-        this.products[productIndex] = updateProduct
-        this.saveToFile(); 
-        return updateProduct;
-    }
-
-    deleteProduct(id){
-        const productIndex = this.products.findIndex((product) => product.id === id)
-        console.log("Esta es la posición de mi producto a eliminar: ",productIndex);
-        
-        if(productIndex === -1 ){
-            return null
-        }
-        const deleteProduct = this.products.splice(productIndex, 1);
-        this.saveToFile();
-        return deleteProduct[0];
     }
 };

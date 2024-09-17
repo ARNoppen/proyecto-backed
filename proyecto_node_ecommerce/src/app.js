@@ -12,7 +12,6 @@ import userRouter from "./routes/user.routes.js";
 
 import ProductManager from "./service/ProductManager.js";
 
-
 const productManager = new ProductManager();
 
 //----declaramos express----
@@ -96,11 +95,28 @@ socketServer.on("connection", socket => {
     enviarProductos();
 
 
-    socket.on("products",data => {
-        const newProduct = productManager.addProduct(data);
-        socketServer.emit("productLogs", productManager.getAllProducts());
+    socket.on("products",async data => {
+        try {
+            const newProduct = {
+                user: data.user,
+                title: data.title,
+                description: data.description,
+                code: data.code,
+                price: data.price,
+                stock: data.stock,
+                category: data.category
+            };
 
-    })
+            // guarda el producto en MongoDB
+            await productManager.addProduct(newProduct);
+
+            // envia la lista actualizada de productos a todos los clientes
+            const products = await productManager.getAllProducts();
+            socketServer.emit('productLogs', products);
+        } catch (error) {
+            console.log('Error al agregar producto:', error);
+        }
+    });
 
 
     //hacemos broadcast del usuario que se conectó
