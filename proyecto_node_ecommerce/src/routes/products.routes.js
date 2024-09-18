@@ -17,7 +17,7 @@ router.use(function(req,res,next){
 
 //GET
 router.get("/", async (req,res)=>{
-    try {            // usamos operador ternario "?" si "req.query.limit" es true se va a ejecutar lo que sigue. si es false se va a ejecutar lo que sigue despues de : en este caso colocamos undefined
+    try {            // usamos operador ternario "?" si "req.query.limit" es true se va a ejecutar lo que sigue. si es false lo que va despues de : en este caso colocamos undefined
         const limit = req.query.limit ? parseInt(req.query.limit): undefined;
         const products = await productManager.getAllProducts(limit)
         res.json(products)
@@ -38,7 +38,6 @@ router.get("/:pid", async (req,res)=>{
             res.status(404).json({error: "Producto no encontrado"});
         }
         
-
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Error interno del servidor (GET por ID products.routes.js)" });
@@ -53,12 +52,10 @@ router.post("/", async (req,res)=>{
         if(!title || !description || !code || !price || !stock || !category){
             return res.status(404).json({ error: "Todos los campos son obligatorios a excepción de thumbnails"});
         }
-
         const newProduct = await productManager.addProduct({ title, description, code, price, stock, category, thumbnails });
-
         res.status(201).json(newProduct);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ error: "Error interno del servidor (POST products.routes.js)" });
     }
 

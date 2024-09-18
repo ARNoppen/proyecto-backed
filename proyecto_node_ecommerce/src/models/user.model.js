@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required:[true, "Debes colocar el email para avanzar"] 
     },
+    password: String,
     age: Number
 },
     {

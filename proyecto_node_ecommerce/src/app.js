@@ -8,7 +8,7 @@ import productsRoutes from "./routes/products.routes.js"
 import cartsRoutes from "./routes/carts.routes.js"
 import __dirname from "./utils.js";
 import viewRouter from "./routes/views.routes.js";
-import userRouter from "./routes/user.routes.js";
+import userRouter from "./routes/users.routes.js";
 
 import ProductManager from "./service/ProductManager.js";
 

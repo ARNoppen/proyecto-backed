@@ -68,7 +68,7 @@ productBox.addEventListener("submit", event => {
 //escuchamos a todos los usuarios que estan conectados
 socket.on("productLogs", data => {
     const productsLog = document.getElementById("productsLog")
-    let logs = ""
+    let logs = "";
 
     
 
@@ -115,11 +115,6 @@ closeProductBox.addEventListener("click", event => {
         title: "Gracias ingresar a la página!! chau.",
         color: "blue",
     })
-
     socket.emit("closeProduct", {close: "closed"})
-
     productsLog.innerHTML = "";
-
-
-    
 })
