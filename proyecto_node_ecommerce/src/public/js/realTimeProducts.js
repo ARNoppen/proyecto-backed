@@ -7,25 +7,32 @@ const productBox = document.getElementById("productBox");
 Swal.fire({
     icon: "info",
     title: "Debemos indentificarte",
-    input: "text",
-    text:"Ingrese un nombre para poder identificar quien ingresó productos",
-    color: "blue",
-    inputValidator: (value) =>{
-        if (!value) {
-            return "Necesitas ingresar tu nombre para seguir"
-        }else{
-            //capturamos el user para hacer un broadcast del nuevo usuario que se conecto
-            socket.emit("userConnect", {user: value})
-        }
+    html: `
+        <input id="firstName" class="swal2-input" placeholder="Nombre" required>
+        <input id="lastName" class="swal2-input" placeholder="Apellido" required>
+        <input id="email" class="swal2-input" placeholder="Email" required>
+        <input id="password" class="swal2-input" placeholder="Contraseña" type="password" required>
+        <input id="age" class="swal2-input" placeholder="Edad" type="number" required>
+    `,
+    focusConfirm: false,
+    preConfirm: () => {
+        return {
+            first_name: document.getElementById('firstName').value,
+            last_name: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            age: document.getElementById('age').value
+        };
     },
     allowOutsideClick: false
   //lo que se resuelve arriba lo capturamos con el then (manejar promesas)
 }).then( result =>{
     user = result.value;
+    socket.emit("userConnect", user); // Envía los datos del usuario al servidor
 
     //cargamos nombre en la plantilla hbs
     const myName = document.getElementById("myName")
-    myName.innerHTML = user; 
+    myName.innerHTML = `${user.first_name} ${user.last_name}`;
 })
 
 
@@ -53,8 +60,7 @@ productBox.addEventListener("submit", event => {
 
                 socket.emit("products", productData);
 
-                productBox.value = ""; 
-            
+                productBox.reset(); 
         }else{
             Swal.fire({
                 icon:"warning",
@@ -69,27 +75,30 @@ productBox.addEventListener("submit", event => {
 socket.on("productLogs", data => {
     const productsLog = document.getElementById("productsLog")
     let logs = "";
-
     
-
     //iteración de data
     data.forEach(log => {
-        logs += `<b>${log.user}</b> creó el siguiente producto: <br> 
-        Titulo: ${log.title} 
-        Descripción: ${log.description}  
-        Código: ${log.code} 
-        Precio: ${log.price} 
-        Stock: ${log.stock} 
-        Categoría: ${log.category} <br>`
-        
-        productsLog.innerHTML = logs;
+        // verifica si log.user está definido antes de intentar acceder a sus propiedades
+            logs += `<b>${log.user.first_name} ${log.user.last_name}</b> creó el siguiente producto: <br>
+                Titulo: ${log.title}
+                Descripción: ${log.description}  
+                Código: ${log.code} 
+                Precio: ${log.price} 
+                Stock: ${log.stock} 
+                Categoría: ${log.category}
+                <br><button onclick="deleteProduct('${log._id}')">Eliminar</button><br>`;
+                
     });
+    productsLog.innerHTML = logs;
 })
 
+deleteProduct(id) = () => {
+    socket.emit("deleteProduct", id);
+}
 
 
 // aca escuchamos a los usuarios que se unen al chat 
-socket.on("userConnect", data =>{
+socket.on("userConnect", data => {
     let message = `Nuevo usuario conectado ${data}`;
     Swal.fire({
         position: "top-end",

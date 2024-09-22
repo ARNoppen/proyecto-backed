@@ -18,7 +18,6 @@ router.get("/products", async (req,res)=>{
         });
     }catch(error){
         console.log("Error en views.router al obtener los productos",error);
-        
     }
 
 })

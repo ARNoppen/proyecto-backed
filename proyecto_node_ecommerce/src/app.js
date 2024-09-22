@@ -11,8 +11,10 @@ import viewRouter from "./routes/views.routes.js";
 import userRouter from "./routes/users.routes.js";
 
 import ProductManager from "./service/ProductManager.js";
+import UserManager from "./service/UserManager.js";
 
 const productManager = new ProductManager();
+const userManager = new UserManager();
 
 //----declaramos express----
 const app = express();
@@ -106,26 +108,39 @@ socketServer.on("connection", socket => {
                 stock: data.stock,
                 category: data.category
             };
-
+            
             // guarda el producto en MongoDB
-            await productManager.addProduct(newProduct);
+            let prueba = await productManager.addProduct(newProduct);
 
             // envia la lista actualizada de productos a todos los clientes
             const products = await productManager.getAllProducts();
             socketServer.emit('productLogs', products);
         } catch (error) {
-            console.log('Error al agregar producto:', error);
+            console.log("Error al agregar producto (app.js):", error);
         }
     });
 
 
     //hacemos broadcast del usuario que se conectó
-    socket.on("userConnect", data =>{
-        console.log(data);
-
-        socket.broadcast.emit("userConnect", data.user )
+    socket.on("userConnect", async userData =>{
+        try {
+            console.log("(app.js) websocket Usuario: ",userData);
+            await userManager.addUser(userData) //guardar el nuevo usuario en la base de datos
+            socket.broadcast.emit("userConnect", userData.user ) //notificar a otros usuarios
+        } catch (error) {
+            console.error("(app.js) Error al registrar el usuario:", error);
+        }
     } )
 
+    socket.on("deleteProduct", async id =>{
+        try {
+            await productManager.deleteProduct(id);
+            const products = await productManager.getAllProducts();
+            socketServer.emit('productLogs', products); // Envia la lista actualizada
+        } catch (error) {
+            console.error("Error al eliminar producto (app.js):", error);
+        }
+    } )
 
     socket.on("closeProduct", data => {
         if(data.close === "closed"){

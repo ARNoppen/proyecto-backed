@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 
 // Definir el esquema del producto
 const productSchema = new mongoose.Schema({
+    user: {
+        type: Object
+    },
     title: String,
     description: String,
     code: String,
