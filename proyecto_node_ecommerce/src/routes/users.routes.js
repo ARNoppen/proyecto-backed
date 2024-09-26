@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { json, Router } from "express";
 import UserManager  from "../service/UserManager.js";
 
 const router = Router();
@@ -52,7 +52,8 @@ router.post("/", async (req,res)=>{
 router.put("/:uid", async (req,res)=>{
     try {
         const userId = req.params.uid;
-        const updateUser = await userManager.updateUser(userId)
+        const updateFields = req.body;
+        const updateUser = await userManager.updateUser(userId, updateFields)
         if(updateUser){
             res.status(201).send({result: "succes", payload: updateUser});
         }else{
@@ -65,11 +66,12 @@ router.put("/:uid", async (req,res)=>{
 });
 
 
-//DELETE
+//DELETE by ID
 router.delete("/:uid", async (req,res)=>{
     try {
         const userId = req.params.uid;
         const deleteUser = await userManager.deleteUser(userId)
+        console.log(deleteUser);
         if (deleteUser) {
             res.status(201).send({result: "succes", payload: deleteUser});
         }else{

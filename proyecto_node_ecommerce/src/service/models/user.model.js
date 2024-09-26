@@ -7,8 +7,8 @@ const userSchema = new mongoose.Schema({
     last_name: String,
     email: {
         type: String,
-        unique: true,
-        required:[true, "Debes colocar el email para avanzar"] 
+        unique: false,
+        required:[false, "Debes colocar el email para avanzar"] 
     },
     password: String,
     age: Number
@@ -16,6 +16,6 @@ const userSchema = new mongoose.Schema({
     {
         versionKey: false //Deshabilita el parametro "__v" 
     }
-)
+);
 
 export const userModel = mongoose.model(userCollection,userSchema)

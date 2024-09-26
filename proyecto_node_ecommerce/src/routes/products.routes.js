@@ -7,6 +7,7 @@ const productManager = new ProductManager();
 
 
 //Practicando middelware a nivel router 
+/*
 router.use(function(req,res,next){
     console.log("Practicando Middleware a nivel de Router ");
     console.log("Horario: ", Date().toLocaleString());
@@ -14,6 +15,7 @@ router.use(function(req,res,next){
     //para salir del middleware
     next()
 })
+*/
 
 //GET
 router.get("/", async (req,res)=>{

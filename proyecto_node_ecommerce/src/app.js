@@ -10,6 +10,8 @@ import __dirname from "./utils.js";
 import viewRouter from "./routes/views.routes.js";
 import userRouter from "./routes/users.routes.js";
 
+import { productModel } from "./service/models/product.model.js";
+
 import ProductManager from "./service/ProductManager.js";
 import UserManager from "./service/UserManager.js";
 
@@ -110,7 +112,7 @@ socketServer.on("connection", socket => {
             };
             
             // guarda el producto en MongoDB
-            let prueba = await productManager.addProduct(newProduct);
+            await productManager.addProduct(newProduct);
 
             // envia la lista actualizada de productos a todos los clientes
             const products = await productManager.getAllProducts();
@@ -158,12 +160,13 @@ socketServer.on("connection", socket => {
 
 //------------------------- Conectamos app con Mongo Atlas (base de datos en la nube) ------------------- 
 
-const uriDB = "mongodb+srv://aranuo23:AsZL0y3ZeDGLLV85@clusterproyecto.85xgv.mongodb.net/EcommerceAtlas?retryWrites=true&w=majority&appName=ClusterProyecto";
+const uriDB = "mongodb+srv://aranuo23:AsZL0y3ZeDGLLV85@clusterproyecto.85xgv.mongodb.net/?retryWrites=true&w=majority&appName=ClusterProyecto";
 
 const connectMongoDB = async () => {
     try {
         await mongoose.connect(uriDB)
         console.log("Conectado con exito a Mongo Atlas usando Mongoose");
+        
         
     } catch (error) {
         console.log("No se pudo conectar a la Base de Datos usando Mongoose: ",error);

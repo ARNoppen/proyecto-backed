@@ -1,4 +1,4 @@
-import { userModel } from "../models/user.model.js"
+import { userModel } from "./models/user.model.js"
 
 export default class UserManager { 
     constructor(){
@@ -35,7 +35,7 @@ export default class UserManager {
         }
     }
 
-    async updateUser(){
+    async updateUser(id, updateFields){
         try {
             return await userModel.findByIdAndUpdate(id, updateFields, {new: true}).exec();
         } catch (error) {
@@ -44,7 +44,7 @@ export default class UserManager {
         }
     }
 
-    async deleteUser(){
+    async deleteUser(id){
         try {
             return await userModel.findByIdAndDelete(id).exec();
         } catch (error) {

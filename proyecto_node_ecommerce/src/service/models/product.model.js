@@ -1,4 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+
+const productCollection = "productos";
 
 // Definir el esquema del producto
 const productSchema = new mongoose.Schema({
@@ -13,6 +15,9 @@ const productSchema = new mongoose.Schema({
     category: String,
     thumbnails: [String],
     status: { type: Boolean, default: true }
+},
+{
+    versionKey: false //Deshabilita el parametro "__v" 
 });
 
-export const productModel = mongoose.model('Producto', productSchema);
+export const productModel = mongoose.model(productCollection, productSchema);

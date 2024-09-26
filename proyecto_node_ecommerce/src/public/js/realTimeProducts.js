@@ -92,7 +92,7 @@ socket.on("productLogs", data => {
     productsLog.innerHTML = logs;
 })
 
-deleteProduct(id) = () => {
+deleteProduct = (id) => {
     socket.emit("deleteProduct", id);
 }
 
