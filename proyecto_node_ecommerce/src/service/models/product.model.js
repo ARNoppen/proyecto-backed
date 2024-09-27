@@ -5,7 +5,11 @@ const productCollection = "productos";
 // Definir el esquema del producto
 const productSchema = new mongoose.Schema({
     user: {
-        type: Object
+        first_name: String,
+        last_name: String,
+        email: String,
+        password: String,
+        age: Number
     },
     title: String,
     description: String,
@@ -13,7 +17,7 @@ const productSchema = new mongoose.Schema({
     price: Number,
     stock: Number,
     category: String,
-    thumbnails: [String],
+    thumbnails: Array,
     status: { type: Boolean, default: true }
 },
 {

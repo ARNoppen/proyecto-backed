@@ -22,8 +22,10 @@ router.get("/products", async (req,res)=>{
 
 })
 
-router.get("/realtimeproducts",(req,res)=>{
-    res.render("realTimeProducts")
-})
+router.get("/realtimeproducts", (req, res) => {
+    res.render("realTimeProducts", {
+        style: "index.css"
+    });
+});
 
 export default router;

@@ -5,11 +5,7 @@ const userCollection = "usuarios";
 const userSchema = new mongoose.Schema({
     first_name: String,
     last_name: String,
-    email: {
-        type: String,
-        unique: false,
-        required:[false, "Debes colocar el email para avanzar"] 
-    },
+    email: String,
     password: String,
     age: Number
 },

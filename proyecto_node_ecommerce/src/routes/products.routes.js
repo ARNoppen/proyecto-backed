@@ -17,6 +17,7 @@ router.use(function(req,res,next){
 })
 */
 
+
 //GET
 router.get("/", async (req,res)=>{
     try {            // usamos operador ternario "?" si "req.query.limit" es true se va a ejecutar lo que sigue. si es false lo que va despues de : en este caso colocamos undefined

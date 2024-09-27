@@ -86,9 +86,10 @@ socketServer.on("connection", socket => {
     
     //esto va a ver cualquier usuario que se conecte
     async function enviarProductos(){
-        try {
+        try {            
             //envia todos los productos al cliente conectado
             const products = await productManager.getAllProducts();
+            
             socket.emit("productLogs", products);
             
         } catch (error) {
@@ -99,15 +100,15 @@ socketServer.on("connection", socket => {
     enviarProductos();
 
 
-    socket.on("products",async data => {
+    socket.on("products", async data => {
         try {
             const newProduct = {
                 user: data.user,
                 title: data.title,
                 description: data.description,
                 code: data.code,
-                price: data.price,
-                stock: data.stock,
+                price: Number(data.price),
+                stock: Number(data.stock),
                 category: data.category
             };
             
@@ -126,7 +127,7 @@ socketServer.on("connection", socket => {
     //hacemos broadcast del usuario que se conectó
     socket.on("userConnect", async userData =>{
         try {
-            console.log("(app.js) websocket Usuario: ",userData);
+            //console.log("(app.js) websocket Usuario: ",userData);
             await userManager.addUser(userData) //guardar el nuevo usuario en la base de datos
             socket.broadcast.emit("userConnect", userData.user ) //notificar a otros usuarios
         } catch (error) {
@@ -160,7 +161,7 @@ socketServer.on("connection", socket => {
 
 //------------------------- Conectamos app con Mongo Atlas (base de datos en la nube) ------------------- 
 
-const uriDB = "mongodb+srv://aranuo23:AsZL0y3ZeDGLLV85@clusterproyecto.85xgv.mongodb.net/?retryWrites=true&w=majority&appName=ClusterProyecto";
+const uriDB = "mongodb+srv://aranuo23:AsZL0y3ZeDGLLV85@clusterproyecto.85xgv.mongodb.net/EcommerceAtlas?retryWrites=true&w=majority&appName=ClusterProyecto";
 
 const connectMongoDB = async () => {
     try {
@@ -170,7 +171,7 @@ const connectMongoDB = async () => {
         
     } catch (error) {
         console.log("No se pudo conectar a la Base de Datos usando Mongoose: ",error);
-        process.exit();
+        process.exit(1);
     }
 }
 

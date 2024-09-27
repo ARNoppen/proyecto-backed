@@ -53,8 +53,8 @@ productBox.addEventListener("submit", event => {
                     title: title,
                     description: description,
                     code: code,
-                    price: price,
-                    stock: stock,
+                    price: parseFloat(price),
+                    stock: parseInt(stock),
                     category: category
                 }
 
