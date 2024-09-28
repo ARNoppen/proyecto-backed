@@ -168,6 +168,27 @@ const connectMongoDB = async () => {
         await mongoose.connect(uriDB)
         console.log("Conectado con exito a Mongo Atlas usando Mongoose");
         
+        //let productos = await productModel.find();
+        //console.log(productos);
+        
+        let productos = await productModel.aggregate([
+            //stage 1: filtramos la categoría "zapatillas"
+            {
+                $match: { category: "zapatillas"}
+            },
+            //stage 2: 
+            {
+                $group: { _id: "$title", totalStock: { $sum: "$stock"}
+                }
+            }
+
+
+
+        ])
+
+        console.log(productos);
+        
+
         
     } catch (error) {
         console.log("No se pudo conectar a la Base de Datos usando Mongoose: ",error);

@@ -45,4 +45,22 @@ export default class CartManager{
                 await cart.save();
                 return cart;
         }
+
+    async deleteProduct(cartId, productId){
+            const cart = await cartModel.findById(cartId)
+            if (!cartId) {
+                console.log("Carrito no encontrado");
+                return null;
+            }
+            const existingProduct = cart.products.findIndex(elem => elem._id.toString() === productId); // confirmamos que el producto exista
+            
+            if (existingProduct !== -1) {
+                cart.products.splice(existingProduct, 1); 
+                await cart.save();
+                return cart;
+            }else{
+                console.log("Producto no encontrado");
+                return null;
+            }
+        }
 };
