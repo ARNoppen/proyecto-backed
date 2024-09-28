@@ -46,6 +46,17 @@ export default class CartManager{
                 return cart;
         }
 
+    async deleteAllProduct(cartId){
+            const cart = await cartModel.findById(cartId)
+            if (!cartId) {
+                console.log("Carrito no encontrado");
+                return null;
+            }
+            cart.products.splice(0,cart.products.length);
+            await cart.save();
+            return cart;
+    }
+
     async deleteProduct(cartId, productId){
             const cart = await cartModel.findById(cartId)
             if (!cartId) {

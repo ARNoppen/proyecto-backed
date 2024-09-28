@@ -52,7 +52,7 @@ router.post("/:cid/product/:pid", async (req,res) => {
 
 //PUT actualizar el carrito con un arreglo de productos
 router.put("/:cid", async (req,res) => {
-        
+
 })
 
 
@@ -64,21 +64,37 @@ router.put("/:cid/products/:pid", async (req,res) => {
 
 
 
+//DELETE eliminar todos los productos del carrito
+router.delete("/:cid", async (req,res) => {
+    try {
+        const cartId = req.params.cid;
+        const deleteAllProduct = await cartManager.deleteAllProduct(cartId)
+        if (deleteAllProduct) {
+            res.json(deleteAllProduct)
+        }else{
+            res.status(404).json({error: "No fue posible eliminar todos los productos del carrito (cart.routes.js)"});
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Error al eliminar todos los producto del carrito (carts.routes.js)" });
+    }
+})
+
 //DELETE eliminar del carrito, producto especifico por ID
 router.delete("/:cid/products/:pid", async (req,res) => {
-        try {
-            const cartId = req.params.cid;
-            const productId = req.params.pid;
-            const deleteProductToCart = await cartManager.deleteProduct(cartId,productId)
-            if (deleteProductToCart) {
-                res.json(deleteProductToCart)
-            }else{
-                res.status(404).json({error: "No fue posible eliminar del carrito (cart.routes.js)"});
-            }
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({ error: "Error al eliminar producto del carrito (carts.routes.js)" });
+    try {
+        const cartId = req.params.cid;
+        const productId = req.params.pid;
+        const deleteProductToCart = await cartManager.deleteProduct(cartId,productId)
+        if (deleteProductToCart) {
+            res.json(deleteProductToCart)
+        }else{
+            res.status(404).json({error: "No fue posible eliminar producto del carrito (cart.routes.js)"});
         }
-})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Error al eliminar producto del carrito (carts.routes.js)" });
+    }
+});
 
 export default router;
