@@ -48,6 +48,8 @@ router.get("/:pid", async (req,res)=>{
     
 });
 
+
+
 //POST  
 router.post("/", async (req,res)=>{
     try {                                                       //thumbnails es la url de la imagen del producto
@@ -63,6 +65,8 @@ router.post("/", async (req,res)=>{
     }
 
 });
+
+
 
 //PUT
 router.put("/:pid", async (req,res)=>{
@@ -80,6 +84,8 @@ router.put("/:pid", async (req,res)=>{
     }
 })
 
+
+
 //DELETE
 router.delete("/:pid", async (req,res)=>{
     try {
@@ -96,6 +102,7 @@ router.delete("/:pid", async (req,res)=>{
         res.status(500).json({ error: "Error interno del servidor (DELETE products.routes.js)" });
     }
 })
+
 
 
 //practicando Multer

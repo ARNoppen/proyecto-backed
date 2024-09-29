@@ -56,6 +56,18 @@ export default class CartManager{
         }
     }
 
+    async updateCart(cartId, updateFields){
+        try {
+            return await cartModel.findByIdAndUpdate(
+                cartId,
+                { $set: { products: updateFields } }, // usar $set para reemplazar el array de productos
+                { new: true }
+            ).exec();
+        } catch (error) {
+            console.error('Error al actualizar producto:', error);
+            throw error;
+        }
+    }
 
     async updateQuantityOfProduct(cartId, productId, newQuantity){
         try {

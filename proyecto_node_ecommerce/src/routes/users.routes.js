@@ -33,6 +33,8 @@ router.get("/:uid", async (req,res) => {
     }
 })
 
+
+
 //POST
 router.post("/", async (req,res)=>{
     try {
@@ -47,6 +49,8 @@ router.post("/", async (req,res)=>{
         res.status(500).json({ error: "Error interno del servidor (POST users.routes.js)" });
     }
 });
+
+
 
 //PUT by ID
 router.put("/:uid", async (req,res)=>{
@@ -64,6 +68,7 @@ router.put("/:uid", async (req,res)=>{
         res.status(500).json({ error: "Error interno del servidor (PUT users.routes.js)" });
     }
 });
+
 
 
 //DELETE by ID

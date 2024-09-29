@@ -21,6 +21,8 @@ router.get("/:cid", async (req,res) => {
     }
 });
 
+
+
 //POST agregar carrito 
 router.post("/", async (req,res) => {
     try {
@@ -50,11 +52,22 @@ router.post("/:cid/product/:pid", async (req,res) => {
 })
 
 
+
 //PUT actualizar el carrito con un arreglo de productos
 router.put("/:cid", async (req,res) => {
-
+    try {
+        const cartId = req.params.cid
+        const updateCart = await cartManager.updateCart(cartId, req.body)
+        if (updateCart) {
+            res.json(updateCart)
+        }else{
+            res.status(404).json({error: "No fue posible actualizar carrito"})
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Error al actualizar los productos ingresados al carrito (carts.routes.js)" });
+    }
 })
-
 
 //PUT actualizar solo el quantity del producto pasado por req.body
 router.put("/:cid/products/:pid", async (req,res) => {
@@ -77,6 +90,8 @@ router.put("/:cid/products/:pid", async (req,res) => {
         res.status(500).json({ error: "Error al actualizar la cantidad de productos ingresados al carrito (carts.routes.js)" });
     }
 })
+
+
 
 //DELETE eliminar todos los productos del carrito
 router.delete("/:cid", async (req,res) => {
