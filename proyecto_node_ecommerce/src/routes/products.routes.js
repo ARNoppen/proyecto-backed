@@ -67,7 +67,7 @@ router.post("/", async (req,res)=>{
 //PUT
 router.put("/:pid", async (req,res)=>{
     try {               //capturamos el id que coloquen en la URL
-        const productId = req.params.pid
+        const productId = req.params.pid;
         const updateProduct = await productManager.updateProduct(productId, req.body);
         if(updateProduct){
             res.json(updateProduct)

@@ -58,11 +58,25 @@ router.put("/:cid", async (req,res) => {
 
 //PUT actualizar solo el quantity del producto pasado por req.body
 router.put("/:cid/products/:pid", async (req,res) => {
-
+    try {
+        const cartId = req.params.cid;
+        const productId = req.params.pid;
+        let {quantity} = req.body;
+        quantity = parseInt(quantity, 10);
+        if (isNaN(quantity) || quantity <= 0) {
+            return res.status(400).json({ error: "El campo quantity debe ser un número mayor que 0." });
+        }
+        const newQuantity = await cartManager.updateQuantityOfProduct(cartId, productId, quantity)
+        if (newQuantity) {
+            res.json(newQuantity)
+        }else{
+            res.status(404).json({error: "Carrito o producto no encontrado"})
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Error al actualizar la cantidad de productos ingresados al carrito (carts.routes.js)" });
+    }
 })
-
-
-
 
 //DELETE eliminar todos los productos del carrito
 router.delete("/:cid", async (req,res) => {
