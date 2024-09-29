@@ -9,10 +9,8 @@ export default class ProductManager {
 
     //metodos
     
-    async getAllProducts(limit) {
+    async getAllProducts(query = {}, options = {}) {
         try {
-            const query = {};
-            const options = limit ? { limit: parseInt(limit) } : {};
             return await productModel.find(query, null, options).exec();
         } catch (error) {
             console.error('Error al obtener productos:', error);

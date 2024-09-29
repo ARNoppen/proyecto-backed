@@ -18,12 +18,27 @@ router.use(function(req,res,next){
 */
 
 
-//GET
+//GET con limit, page, sort y query
 router.get("/", async (req,res)=>{
     try {            // usamos operador ternario "?" si "req.query.limit" es true se va a ejecutar lo que sigue. si es false lo que va despues de : en este caso colocamos undefined
-        const limit = req.query.limit ? parseInt(req.query.limit): undefined;
-        const products = await productManager.getAllProducts(limit)
+        const limit = req.query.limit ? parseInt(req.query.limit): 10;
+        const page = req.query.page ? parseInt(req.query.page) : 1;
+        const sort = req.query.sort ? req.query.sort.toLowerCase() : null;
+        const query = req.query.query ? { type: req.query.query } : {};
+
+        // Opciones de paginación
+        const options = {
+            limit: limit,
+            skip: (page - 1) * limit,
+        };
+
+        if (sort) {
+            options.sort = { price: sort === "asc" ? 1 : -1 };
+        }
+
+        const products = await productManager.getAllProducts(query, options);
         res.json(products)
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Error interno del servidor (GET products.routes.js)" });
