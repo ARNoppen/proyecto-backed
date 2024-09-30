@@ -1,6 +1,7 @@
 import { response, Router } from "express";
 import { uploader } from "../utils.js";
 import ProductManager from "../service/ProductManager.js";
+import { productModel } from "../service/models/product.model.js";
 
 const router = Router();
 const productManager = new ProductManager();
@@ -36,8 +37,30 @@ router.get("/", async (req,res)=>{
             options.sort = { price: sort === "asc" ? 1 : -1 };
         }
 
+        const totalProducts = await productModel.countDocuments(query);
         const products = await productManager.getAllProducts(query, options);
-        res.json(products)
+        const totalPages = Math.ceil(totalProducts / limit);
+
+        const hasPrevPage = page > 1;
+        const hasNextPage = page < totalPages;
+        const prevPage = hasPrevPage ? page - 1 : null;
+        const nextPage = hasNextPage ? page + 1 : null;
+
+        const prevLink = hasPrevPage ? `/api/products?limit=${limit}&page=${prevPage}&sort=${sort}&query=${req.query.query || ''}` : null;
+        const nextLink = hasNextPage ? `/api/products?limit=${limit}&page=${nextPage}&sort=${sort}&query=${req.query.query || ''}` : null;
+        
+        res.json({
+            status: "success",
+            payload: products,
+            totalPages: totalPages,
+            prevPage: prevPage,
+            nextPage: nextPage,
+            page: page,
+            hasPrevPage: hasPrevPage,
+            hasNextPage: hasNextPage,
+            prevLink: prevLink,
+            nextLink: nextLink
+        });
 
     } catch (error) {
         console.log(error);
