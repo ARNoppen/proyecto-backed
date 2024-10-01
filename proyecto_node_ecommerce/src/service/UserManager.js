@@ -25,6 +25,15 @@ export default class UserManager {
         }
     }
 
+    async getUserByEmail(email) {
+        try {
+            return await userModel.findOne({ email }).exec();
+        } catch (error) {
+            console.error("Error al obtener usuario por email:", error);
+            throw error;
+        }
+    }
+
     async addUser(user){
         try {
             const newUser = new userModel(user)
@@ -52,4 +61,4 @@ export default class UserManager {
             throw error;
         }
     }
-}
+};

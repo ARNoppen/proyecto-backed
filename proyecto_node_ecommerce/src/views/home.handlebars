@@ -12,6 +12,10 @@
                     Precio: {{this.price}} <br>
                     Stock: {{this.stock}} <br>
                     Categoría: {{this.category}} <br><br>
+                    <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
+                    <a href="/products/{{this._id}}">
+                        <button>Abrir producto completo</button>
+                    </a>
                 </li>
             {{/each}}
             {{else}}

@@ -3,6 +3,7 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
+import session from 'express-session';
 //import de nuestros otros directorios que ya exportamos
 import productsRoutes from "./routes/products.routes.js"
 import cartsRoutes from "./routes/carts.routes.js"
@@ -14,9 +15,11 @@ import { productModel } from "./service/models/product.model.js";
 
 import ProductManager from "./service/ProductManager.js";
 import UserManager from "./service/UserManager.js";
+import CartManager from "./service/CartManager.js";
 
 const productManager = new ProductManager();
 const userManager = new UserManager();
+const cartManager = new CartManager();
 
 //----declaramos express----
 const app = express();
@@ -36,7 +39,12 @@ app.use(function(req,res,next){
     next()
 })
 */
-
+//middleware para inicio de sesión
+app.use(session({
+    secret: 'mi_secreto',  // Cambia por una cadena secreta
+    resave: false,
+    saveUninitialized: false
+}));
 
 //uso de archivos public, le indicamos al servidor que el directorio public es publico
 app.use(express.static(__dirname+"/public/"));
@@ -147,10 +155,26 @@ socketServer.on("connection", socket => {
 
     socket.on("closeProduct", data => {
         if(data.close === "closed"){
-            socket.disconnect()
+            socket.disconnect();
         }
-    })
-})
+    });
+
+    socket.on("addToCart", async data => {
+        try {
+            const productId = data.productId;
+            if (!productId) {
+                throw new Error("productId no puede estar vacío");
+            }
+            const userId = socket.id; // aca se puede un identificador del usuario
+    
+            await cartManager.addToCart(userId, productId);
+    
+            socket.emit('cartUpdated', 'Producto agregado al carrito exitosamente.');
+        } catch (error) {
+            console.log("Error al agregar producto al carrito:", error);
+        }
+    });
+});
 
 
 

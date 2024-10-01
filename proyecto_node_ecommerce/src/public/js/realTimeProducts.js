@@ -1,39 +1,12 @@
 const socket = io();
 
-let user;
+let user = {};
 const productBox = document.getElementById("productBox");
 
-//-------------sweet alert---------- 
-Swal.fire({
-    icon: "info",
-    title: "Debemos indentificarte",
-    html: `
-        <input id="firstName" class="swal2-input" placeholder="Nombre" required>
-        <input id="lastName" class="swal2-input" placeholder="Apellido" required>
-        <input id="email" class="swal2-input" placeholder="Email" required>
-        <input id="password" class="swal2-input" placeholder="Contraseña" type="password" required>
-        <input id="age" class="swal2-input" placeholder="Edad" type="number" required>
-    `,
-    focusConfirm: false,
-    preConfirm: () => {
-        return {
-            first_name: document.getElementById('firstName').value,
-            last_name: document.getElementById('lastName').value,
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value,
-            age: document.getElementById('age').value
-        };
-    },
-    allowOutsideClick: false
-  //lo que se resuelve arriba lo capturamos con el then (manejar promesas)
-}).then( result =>{
-    user = result.value;
-    socket.emit("userConnect", user); // Envía los datos del usuario al servidor
 
     //cargamos nombre en la plantilla hbs
     const myName = document.getElementById("myName")
     myName.innerHTML = `${user.first_name} ${user.last_name}`;
-})
 
 
 // guardamos productos que ingresen los usuarios
