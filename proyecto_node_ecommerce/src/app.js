@@ -58,6 +58,12 @@ app.set("views",__dirname+"/views/");
 //para indicarle que el motor que inicializamos arriba es el que equeremos usar
 app.set("view engine","handlebars");
 
+app.engine("handlebars", handlebars.engine({
+    runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true
+    }
+}));
 
 
 
