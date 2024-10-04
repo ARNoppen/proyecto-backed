@@ -4,6 +4,7 @@ const cartCollection = "carritos";
 
 //definir el esquema del producto
 const cartSchema = new mongoose.Schema({
+    userId: {type: mongoose.Schema.Types.ObjectId, ref: "usuarios"},
     products: [{
         product: { type: mongoose.Schema.Types.ObjectId, ref: "productos" },
         quantity: { type: Number, default: 1 }

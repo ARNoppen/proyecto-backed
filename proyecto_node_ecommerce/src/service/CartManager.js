@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { cartModel } from "./models/cart.model.js";
 import ProductManager from "./ProductManager.js";
 
@@ -152,11 +153,14 @@ export default class CartManager{
                 return null;
             }
 
+            // Convertir userId a ObjectId si es necesario
+            const userObjectId = new mongoose.Types.ObjectId(userId);
+
             // Buscamos el carrito del usuario, si no existe creamos uno nuevo
-            let cart = await cartModel.findOne({ userId });
+            let cart = await cartModel.findOne({ userId: userObjectId });
             if (!cart) {
                 console.log("No se encontró carrito, creando uno nuevo para el usuario:", userId);
-                cart = new cartModel({ userId, products: [] });
+                cart = new cartModel({ userId: userObjectId, products: [] });
             }
 
             // Verificamos si el producto ya está en el carrito
