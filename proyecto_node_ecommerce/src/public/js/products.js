@@ -4,7 +4,7 @@ const socket = io();
 const allProducts = document.getElementById("productList")
 
 function addToCart(productId) {
-    console.log(`Intentando agregar al carrito el producto con ID: ${productId}`);
+    console.log(`Se agregó al carrito el producto con ID: ${productId}`);
     socket.emit('addToCart', { productId });
 }
 

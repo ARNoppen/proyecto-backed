@@ -146,34 +146,34 @@ export default class CartManager{
 
     async addToCart(userId, productId) {
         try {
-            // Verificamos si el producto existe en la base de datos
+            // verificamos si el producto existe en la base de datos
             const product = await productManagerToCarrito.getProductById(productId);
             if (!product) {
                 console.log("Producto no encontrado");
                 return null;
             }
 
-            // Convertir userId a ObjectId si es necesario
+            // convertir userId a ObjectId si es necesario
             const userObjectId = new mongoose.Types.ObjectId(userId);
 
-            // Buscamos el carrito del usuario, si no existe creamos uno nuevo
+            // buscamos el carrito del usuario, si no existe creamos uno nuevo
             let cart = await cartModel.findOne({ userId: userObjectId });
             if (!cart) {
                 console.log("No se encontró carrito, creando uno nuevo para el usuario:", userId);
                 cart = new cartModel({ userId: userObjectId, products: [] });
             }
 
-            // Verificamos si el producto ya está en el carrito
+            // verificamos si el producto ya está en el carrito
             const existingProduct = cart.products.find(elem => elem.product.toString() === productId);
             if (existingProduct) {
-                // Si el producto ya existe, incrementamos la cantidad
+                // si el producto ya existe, incrementamos la cantidad
                 existingProduct.quantity++;
             } else {
-                // Si el producto no está en el carrito, lo agregamos
+                // si el producto no está en el carrito, lo agregamos
                 cart.products.push({ product: productId, quantity: 1 });
             }
 
-            // Guardamos el carrito actualizado
+            // guardamos el carrito actualizado
             await cart.save();
             return cart;
         } catch (error) {

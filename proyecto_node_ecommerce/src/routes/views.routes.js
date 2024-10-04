@@ -59,7 +59,7 @@ router.get("/products", authMiddleware, async (req,res)=>{
         const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
         const products = await productManager.getAllProducts(limit);
 
-        res.render("home",{
+        res.render("products",{
             products: products,
             style: "index.css"
         });

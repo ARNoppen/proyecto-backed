@@ -87,7 +87,7 @@ const httpServer = app.listen((PORT), ()=>{
     console.log("Servidor corriendo en puerto",PORT );  
 })
 
-//Abrimos canal de comunicació del lado del server
+//abrimos canal de comunicació del lado del server
 const socketServer = new Server(httpServer)
 
 
@@ -158,7 +158,7 @@ socketServer.on("connection", socket => {
         try {
             await productManager.deleteProduct(id);
             const products = await productManager.getAllProducts();
-            socketServer.emit("productLogs", products); // Envia la lista actualizada
+            socketServer.emit("productLogs", products); // envia la lista actualizada
         } catch (error) {
             console.error("Error al eliminar producto (app.js):", error);
         }
@@ -175,7 +175,7 @@ socketServer.on("connection", socket => {
             if (!socket.handshake.session.user) {
                 throw new Error("Usuario no autenticado");
             }
-            const userId = socket.handshake.session.user._id; // Asumiendo que guardas el _id del usuario en la sesión
+            const userId = socket.handshake.session.user._id;
             const productId = data.productId;
             
             await cartManager.addToCart(userId, productId);
