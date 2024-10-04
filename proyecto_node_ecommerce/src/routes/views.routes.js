@@ -48,13 +48,12 @@ router.post("/register", async (req, res) => {
 
 //middleware para proteger /products y /realTimeProducts
 function authMiddleware(req, res, next) {
-    if (req.session.user) {
+    if (req.session && req.session.user) {
         next();
     } else {
         res.redirect("/login");
     }
 }
-
 router.get("/products", authMiddleware, async (req,res)=>{
     try{
         const limit = req.query.limit ? parseInt(req.query.limit) : undefined;

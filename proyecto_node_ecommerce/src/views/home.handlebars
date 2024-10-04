@@ -5,7 +5,7 @@
         {{#if products.length}}
             {{#each products}}
                 <li>
-                    <b>{{this.user}}</b> creó el siguiente producto: <br>
+                    <b>{{this.user.first_name}} {{this.user.last_name}}</b> creó el siguiente producto: <br>
                     Titulo: {{this.title}} <br>
                     Descripción: {{this.description}} <br>
                     Código: {{this.code}} <br>

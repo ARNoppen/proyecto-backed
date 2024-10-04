@@ -12,3 +12,6 @@ function addToCart(productId) {
 socket.on('cartUpdated', (message) => {
     Swal.fire('Producto agregado', message, 'success');
 });
+socket.on('cartError', (errorMessage) => {
+    Swal.fire('Error', errorMessage, 'error');
+});

@@ -3,7 +3,8 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
-import session from 'express-session';
+import session from "express-session";
+import sharedsession from "express-socket.io-session";
 //import de nuestros otros directorios que ya exportamos
 import productsRoutes from "./routes/products.routes.js"
 import cartsRoutes from "./routes/carts.routes.js"
@@ -40,11 +41,14 @@ app.use(function(req,res,next){
 })
 */
 //middleware para inicio de sesión
-app.use(session({
-    secret: 'mi_secreto',  // Cambia por una cadena secreta
+const sessionMiddleware = session({
+    secret: "mi_secreto",  // Cambia esto por un secreto seguro
     resave: false,
     saveUninitialized: false
-}));
+});
+
+
+app.use(sessionMiddleware);
 
 //uso de archivos public, le indicamos al servidor que el directorio public es publico
 app.use(express.static(__dirname+"/public/"));
@@ -88,7 +92,8 @@ const socketServer = new Server(httpServer)
 
 
 
-
+// Compartir la sesión con socket.io
+socketServer.use(sharedsession(sessionMiddleware));
 
 
 
@@ -131,7 +136,7 @@ socketServer.on("connection", socket => {
 
             // envia la lista actualizada de productos a todos los clientes
             const products = await productManager.getAllProducts();
-            socketServer.emit('productLogs', products);
+            socketServer.emit("productLogs", products);
         } catch (error) {
             console.log("Error al agregar producto (app.js):", error);
         }
@@ -153,7 +158,7 @@ socketServer.on("connection", socket => {
         try {
             await productManager.deleteProduct(id);
             const products = await productManager.getAllProducts();
-            socketServer.emit('productLogs', products); // Envia la lista actualizada
+            socketServer.emit("productLogs", products); // Envia la lista actualizada
         } catch (error) {
             console.error("Error al eliminar producto (app.js):", error);
         }
@@ -167,17 +172,18 @@ socketServer.on("connection", socket => {
 
     socket.on("addToCart", async data => {
         try {
-            const productId = data.productId;
-            if (!productId) {
-                throw new Error("productId no puede estar vacío");
+            if (!socket.handshake.session.user) {
+                throw new Error("Usuario no autenticado");
             }
-            const userId = socket.id; // aca se puede un identificador del usuario
-    
+            const userId = socket.handshake.session.user._id; // Asumiendo que guardas el _id del usuario en la sesión
+            const productId = data.productId;
+            
             await cartManager.addToCart(userId, productId);
-    
-            socket.emit('cartUpdated', 'Producto agregado al carrito exitosamente.');
+            
+            socket.emit("cartUpdated", "Producto agregado al carrito exitosamente.");
         } catch (error) {
             console.log("Error al agregar producto al carrito:", error);
+            socket.emit("cartError", error.message);
         }
     });
 });
