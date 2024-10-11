@@ -2,7 +2,6 @@ import { userModel } from "./models/user.model.js"
 
 export default class UserManager { 
     constructor(){
-
     }
     //metodos
     async getAllUser(limit){

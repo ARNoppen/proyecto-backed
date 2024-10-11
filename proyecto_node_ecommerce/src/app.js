@@ -42,7 +42,7 @@ app.use(function(req,res,next){
 */
 //middleware para inicio de sesión
 const sessionMiddleware = session({
-    secret: "mi_secreto",  // Cambia esto por un secreto seguro
+    secret: "ecommerce",
     resave: false,
     saveUninitialized: false
 });

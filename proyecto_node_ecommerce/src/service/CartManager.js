@@ -8,10 +8,7 @@ const productManagerToCarrito = new ProductManager();
 export default class CartManager{
     constructor(){
     }
-
-
     //metodos
-
     async getCart(id){
         return await cartModel.findById(id).populate("products.product").exec();
     }

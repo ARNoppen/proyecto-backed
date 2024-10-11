@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
     const user = await userManager.getUserByEmail(email);
 
     if (user && user.password === password) {
-        req.session.user = user;  // Guardamos al usuario en la sesión
+        req.session.user = user;  // guardamos al usuario en la sesión
         res.redirect("/products");
     } else {
         res.status(401).send("Usuario o contraseña incorrectos");
@@ -33,9 +33,6 @@ router.get("/register", (req, res) => {
 
 router.post("/register", async (req, res) => {
     const { first_name, last_name, email, password, age } = req.body;
-    
-    // Aquí podrías agregar la lógica para guardar al usuario en la base de datos
-    // Asegúrate de manejar el hash de la contraseña y otros pasos necesarios de seguridad
 
     try {
         await userManager.addUser({ first_name, last_name, email, password, age });
@@ -45,6 +42,7 @@ router.post("/register", async (req, res) => {
         res.status(500).send("Error al registrar usuario");
     }
 });
+
 
 //middleware para proteger /products y /realTimeProducts
 function authMiddleware(req, res, next) {
@@ -68,8 +66,7 @@ router.get("/products", authMiddleware, async (req,res)=>{
     }
 });
 
-
-// Ruta para obtener un producto individual
+// ruta para obtener un producto individual
 router.get("/products/:pid", async (req, res) => {
     try {
         const productId = req.params.pid;
@@ -84,8 +81,7 @@ router.get("/products/:pid", async (req, res) => {
     }
 });
 
-
-// Ruta para obtener un carrito específico
+// ruta para obtener un carrito específico
 router.get("/carts/:cid", async (req, res) => {
     try {
         const cartId = req.params.cid;
@@ -99,7 +95,6 @@ router.get("/carts/:cid", async (req, res) => {
         console.log("Error al obtener carrito:", error);
     }
 });
-
 
 router.get("/realtimeproducts", authMiddleware, (req, res) => {
     res.render("realTimeProducts", {

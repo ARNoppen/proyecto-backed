@@ -3,12 +3,8 @@ import { productModel } from "./models/product.model.js";
 
 export default class ProductManager {
     constructor(){
-        
     }
-
-
     //metodos
-    
     async getAllProducts(query = {}, options = {}) {
         try {
             return await productModel.find(query, null, options).exec();
