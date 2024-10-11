@@ -75,8 +75,9 @@ app.engine("handlebars", handlebars.engine({
 //----------Endpoints (Rutas) que tenemos configuradas en nuestro proyecto---------
 app.use("/api/products", productsRoutes)
 app.use("/api/carts", cartsRoutes)
-app.use("/", viewRouter)
 app.use("/api/users", userRouter)
+app.use("/", viewRouter)
+
 
 
 
@@ -146,7 +147,6 @@ socketServer.on("connection", socket => {
     //hacemos broadcast del usuario que se conectó
     socket.on("userConnect", async userData =>{
         try {
-            //console.log("(app.js) websocket Usuario: ",userData);
             await userManager.addUser(userData) //guardar el nuevo usuario en la base de datos
             socket.broadcast.emit("userConnect", userData.user ) //notificar a otros usuarios
         } catch (error) {
