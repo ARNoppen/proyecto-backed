@@ -111,16 +111,12 @@ socketServer.on("connection", socket => {
         try {            
             //envia todos los productos al cliente conectado
             const products = await productManager.getAllProducts();
-            
             socket.emit("productLogs", products);
-            
         } catch (error) {
             console.log("Error en app.js al enviar productos a los usuarios conectados", error);
-            
         }
     }
     enviarProductos();
-
 
     socket.on("products", async data => {
         try {
@@ -133,13 +129,9 @@ socketServer.on("connection", socket => {
                 stock: Number(data.stock),
                 category: data.category
             };
-            
-            // guarda el producto en MongoDB
-            await productManager.addProduct(newProduct);
-
-            // envia la lista actualizada de productos a todos los clientes
+            await productManager.addProduct(newProduct); // guarda el producto en MongoDB
             const products = await productManager.getAllProducts();
-            socketServer.emit("productLogs", products);
+            socketServer.emit("productLogs", products); // envia la lista actualizada de productos a todos los clientes
         } catch (error) {
             console.log("Error al agregar producto (app.js):", error);
         }

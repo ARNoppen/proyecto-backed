@@ -28,7 +28,8 @@ router.post("/login", async (req, res) => {
 
 router.get("/register", (req, res) => {
     res.render("register", {
-        style: "index.css" });
+        style: "index.css" 
+    });
 });
 
 router.post("/register", async (req, res) => {
@@ -36,10 +37,14 @@ router.post("/register", async (req, res) => {
 
     try {
         await userManager.addUser({ first_name, last_name, email, password, age });
-        res.redirect("/login"); // Redirige al login después de registrarse
+        // Responder con JSON en lugar de redirigir
+        res.json({ success: true, message: "Usuario registrado exitosamente" });
     } catch (error) {
         console.log("Error al registrar el usuario:", error);
-        res.status(500).send("Error al registrar usuario");
+        if (error.code === 11000) {
+            return res.status(400).json({ success: false, message: "El email ya está en uso. Favor intentar con otro." });
+        }
+        res.status(500).json({ success: false, message: "Error al registrar usuario" });
     }
 });
 
