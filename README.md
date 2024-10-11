@@ -10,7 +10,8 @@ Estructura del proyecto:
 │        ├── models
 │   ├── views
 │   └── app.js
-├── 
+├── .env
+├── package-lock.json
 ├── package.json
 └── README.md
 

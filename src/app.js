@@ -3,8 +3,10 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import session from "express-session";
 import sharedsession from "express-socket.io-session";
+import cookieParser from "cookie-parser";
 //import de nuestros otros directorios que ya exportamos
 import productsRoutes from "./routes/products.routes.js"
 import cartsRoutes from "./routes/carts.routes.js"
@@ -21,6 +23,8 @@ import CartManager from "./service/CartManager.js";
 const productManager = new ProductManager();
 const userManager = new UserManager();
 const cartManager = new CartManager();
+
+dotenv.config();
 
 //----declaramos express----
 const app = express();
@@ -40,20 +44,22 @@ app.use(function(req,res,next){
     next()
 })
 */
-//middleware para inicio de sesión
-const sessionMiddleware = session({
-    secret: "ecommerce",
-    resave: false,
-    saveUninitialized: false
-});
-
-
-app.use(sessionMiddleware);
 
 //uso de archivos public, le indicamos al servidor que el directorio public es publico
 app.use(express.static(__dirname+"/public/"));
 
 
+//middleware para inicio de sesión
+const sessionSecret = process.env.SESSION_SECRET;
+const sessionMiddleware = session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false
+});
+
+app.use(sessionMiddleware);
+
+app.use(cookieParser())
 
 //-------inicializamos el motor de plantilla----------
 app.engine("handlebars",handlebars.engine());
@@ -70,15 +76,11 @@ app.engine("handlebars", handlebars.engine({
 }));
 
 
-
-
 //----------Endpoints (Rutas) que tenemos configuradas en nuestro proyecto---------
 app.use("/api/products", productsRoutes)
 app.use("/api/carts", cartsRoutes)
 app.use("/api/users", userRouter)
 app.use("/", viewRouter)
-
-
 
 
 
@@ -197,7 +199,7 @@ socketServer.on("connection", socket => {
 
 //------------------------- Conectamos app con Mongo Atlas (base de datos en la nube) ------------------- 
 
-const uriDB = "mongodb+srv://aranuo23:AsZL0y3ZeDGLLV85@clusterproyecto.85xgv.mongodb.net/EcommerceAtlas?retryWrites=true&w=majority&appName=ClusterProyecto";
+const uriDB = process.env.MONGODB_URI;
 
 const connectMongoDB = async () => {
     try {
