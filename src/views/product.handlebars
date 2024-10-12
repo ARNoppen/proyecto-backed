@@ -6,7 +6,11 @@
     <p><b>Stock:</b> {{product.stock}}</p>
     <p><b>Categoría:</b> {{product.category}}</p>
     <button onclick="addToCart('{{product._id}}')">Agregar al carrito</button>
+    <button onclick="window.location.href='/products'"> Volver </button>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/product.js"></script>
+<script src="/js/product.js"></script>  
+
+{{!--Para poder usar Sweetalert--}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

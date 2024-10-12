@@ -72,7 +72,7 @@ router.get("/products", authMiddleware, async (req,res)=>{
 });
 
 // ruta para obtener un producto individual
-router.get("/products/:pid", async (req, res) => {
+router.get("/products/:pid", authMiddleware, async (req, res) => {
     try {
         const productId = req.params.pid;
         const product = await productManager.getProductById(productId);
@@ -87,7 +87,7 @@ router.get("/products/:pid", async (req, res) => {
 });
 
 // ruta para obtener un carrito específico
-router.get("/carts/:cid", async (req, res) => {
+router.get("/carts/:cid", authMiddleware, async (req, res) => {
     try {
         const cartId = req.params.cid;
         const cart = await cartManager.getCartById(cartId);

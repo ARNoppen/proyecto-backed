@@ -2,7 +2,14 @@
 const socket = io();
 
 function addToCart(productId) {
-    // lógica para agregar al carrito
-    console.log(`Producto ${productId} agregado al carrito`);
-    // acá se puede enviar la petición al servidor para agregar al carrito
+    console.log(`Se agregó al carrito el producto con ID: ${productId}`);
+    socket.emit('addToCart', { productId });
 }
+
+// Manejador de respuesta para la adición al carrito
+socket.on('cartUpdated', (message) => {
+    Swal.fire('Producto agregado', message, 'success');
+});
+socket.on('cartError', (errorMessage) => {
+    Swal.fire('Error', errorMessage, 'error');
+});
