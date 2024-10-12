@@ -10,8 +10,9 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     password: String,
-    age: Number
-},
+    age: Number,
+    cartId: {type: mongoose.Schema.Types.ObjectId, ref: "carritos"}
+},    
     {
         versionKey: false //Deshabilita el parametro "__v" 
     }

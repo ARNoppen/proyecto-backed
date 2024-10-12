@@ -169,10 +169,11 @@ socketServer.on("connection", socket => {
             if (!socket.handshake.session.user) {
                 throw new Error("Usuario no autenticado");
             }
-            const userId = socket.handshake.session.user._id;
+            const user = socket.handshake.session.user;
+            const cartId = user.cartId;
             const productId = data.productId;
             
-            await cartManager.addToCart(userId, productId);
+            await cartManager.addToCart(cartId, productId);
             
             socket.emit("cartUpdated", "Producto agregado al carrito exitosamente.");
         } catch (error) {

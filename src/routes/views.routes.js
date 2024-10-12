@@ -1,10 +1,12 @@
 import express from "express";
 import ProductManager from "../service/ProductManager.js";
 import UserManager from "../service/UserManager.js";
+import CartManager from "../service/CartManager.js";
 
 const router = express.Router()
 const productManager = new ProductManager(); 
 const userManager = new UserManager();
+const cartManager = new CartManager();
 
 
 
@@ -36,9 +38,22 @@ router.post("/register", async (req, res) => {
     const { first_name, last_name, email, password, age } = req.body;
 
     try {
-        await userManager.addUser({ first_name, last_name, email, password, age });
-        // Responder con JSON en lugar de redirigir
+        // crea un nuevo usuario primero
+        const newUser = await userManager.addUser({ 
+            first_name, 
+            last_name, 
+            email, 
+            password, 
+            age
+        });
+
+        // crea un nuevo carrito solo si el usuario no tiene uno
+        const newCart = await cartManager.addCart(newUser._id);
+        newUser.cartId = newCart._id;
+        await newUser.save();
+
         res.json({ success: true, message: "Usuario registrado exitosamente" });
+        
     } catch (error) {
         console.log("Error al registrar el usuario:", error);
         if (error.code === 11000) {
@@ -61,10 +76,13 @@ router.get("/products", authMiddleware, async (req,res)=>{
     try{
         const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
         const products = await productManager.getAllProducts(limit);
+        const user = req.session.user;
+        const userCartId = user && user.cartId;
 
         res.render("products",{
             products: products,
-            style: "index.css"
+            style: "index.css",
+            cid: userCartId
         });
     }catch(error){
         console.log("Error en views.router al obtener los productos",error);
@@ -91,6 +109,10 @@ router.get("/carts/:cid", authMiddleware, async (req, res) => {
     try {
         const cartId = req.params.cid;
         const cart = await cartManager.getCartById(cartId);
+
+        if (!cart) {
+            return res.status(404).send("Carrito no encontrado");
+        }
 
         res.render("cart", {
             cart: cart,
