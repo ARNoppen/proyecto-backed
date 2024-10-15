@@ -20,7 +20,7 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await userManager.getUserByEmail(email);
 
-    if (user && user.password === password) {
+    if (user && bcrypt.compareSync(password, user.password)) {
         req.session.user = user;  // guardamos al usuario en la sesión
         res.redirect("/products");
     } else {

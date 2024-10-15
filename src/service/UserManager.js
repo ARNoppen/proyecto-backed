@@ -1,4 +1,5 @@
-import { userModel } from "./models/user.model.js"
+import { userModel } from "./models/user.model.js";
+import bcrypt from "bcrypt";
 
 export default class UserManager { 
     constructor(){
@@ -35,6 +36,8 @@ export default class UserManager {
 
     async addUser(user){
         try {
+            const saltRounds = 10;
+            user.password = bcrypt.hashSync(user.password, saltRounds);
             const newUser = new userModel(user)
             return await newUser.save()
         } catch (error) {
