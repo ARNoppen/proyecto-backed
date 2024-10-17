@@ -1,13 +1,14 @@
 const socket = io();
 
-let user = {};
 const productBox = document.getElementById("productBox");
 
 
-    //cargamos nombre en la plantilla hbs
-    const myName = document.getElementById("myName")
-    myName.innerHTML = `${user.first_name} ${user.last_name}`;
-
+    //escuchamos evento y cargamos nombre en la plantilla hbs
+    socket.on("userData", data => {
+        user = data;
+        const myName = document.getElementById("myName");
+        myName.innerHTML = `${user.first_name} ${user.last_name}`;
+    });
 
 // guardamos productos que ingresen los usuarios
 productBox.addEventListener("submit", event => {
@@ -48,7 +49,6 @@ productBox.addEventListener("submit", event => {
 socket.on("productLogs", data => {
     const productsLog = document.getElementById("productsLog")
     let logs = "";
-    
     //iteración de data
     data.forEach(log => {
         // verifica si log.user está definido antes de intentar acceder a sus propiedades

@@ -11,8 +11,12 @@ const userSchema = new mongoose.Schema({
     },
     password: String,
     age: Number,
-    cartId: {type: mongoose.Schema.Types.ObjectId, ref: "carritos"}
-},    
+    cartId: {type: mongoose.Schema.Types.ObjectId, ref: "carritos"},
+    role: {
+        type: String,
+        default: "user"
+    }
+},
     {
         versionKey: false //Deshabilita el parametro "__v" 
     }

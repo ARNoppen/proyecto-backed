@@ -105,7 +105,9 @@ socketServer.use(sharedsession(sessionMiddleware));
 
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
-    
+    if (socket.handshake.session.user) {
+        socket.emit("userData", socket.handshake.session.user);
+    }
     //esto va a ver cualquier usuario que se conecte
     async function enviarProductos(){
         try {            

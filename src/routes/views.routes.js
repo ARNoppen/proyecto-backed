@@ -1,4 +1,5 @@
 import express from "express";
+import bcrypt from "bcrypt";
 import ProductManager from "../service/ProductManager.js";
 import UserManager from "../service/UserManager.js";
 import CartManager from "../service/CartManager.js";
