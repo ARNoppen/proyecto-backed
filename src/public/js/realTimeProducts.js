@@ -52,18 +52,22 @@ socket.on("productLogs", data => {
     //iteración de data
     data.forEach(log => {
         // verifica si log.user está definido antes de intentar acceder a sus propiedades
-            logs += `<b>${log.user.first_name} ${log.user.last_name}</b> creó el siguiente producto: <br>
+            logs += `<br><br>${log.user.first_name} ${log.user.last_name} creó el siguiente producto:</br> 
                 Titulo: ${log.title}
                 Descripción: ${log.description}  
                 Código: ${log.code} 
                 Precio: ${log.price} 
                 Stock: ${log.stock} 
                 Categoría: ${log.category}
-                <br><button onclick="deleteProduct('${log._id}')">Eliminar</button><br>`;
+                `
+                if (user.role === "admin") {
+                    logs += `<button onclick="deleteProduct('${log._id}')">Eliminar</button>`;
+                }
+                `</br>`
                 
     });
     productsLog.innerHTML = logs;
-})
+});
 
 deleteProduct = (id) => {
     socket.emit("deleteProduct", id);

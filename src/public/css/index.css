@@ -1,4 +1,9 @@
+body{
+    background-color: #ADD8E6;
+}
+
 p{
-    color:rgb(0, 110, 255);
+    color: black;
     font-size: 30px;
 }
+

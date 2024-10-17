@@ -148,17 +148,20 @@ socketServer.on("connection", socket => {
         } catch (error) {
             console.error("(app.js) Error al registrar el usuario:", error);
         }
-    } )
+    });
 
-    socket.on("deleteProduct", async id =>{
+    socket.on("deleteProduct", async id => {
         try {
+            if (socket.handshake.session.user.role !== "admin") {
+                throw new Error("No tenes permisos para eliminar este producto.");
+            }
             await productManager.deleteProduct(id);
             const products = await productManager.getAllProducts();
-            socketServer.emit("productLogs", products); // envia la lista actualizada
+            socketServer.emit("productLogs", products); // envía la lista actualizada de productos
         } catch (error) {
             console.error("Error al eliminar producto (app.js):", error);
         }
-    } )
+    });
 
     socket.on("closeProduct", data => {
         if(data.close === "closed"){
