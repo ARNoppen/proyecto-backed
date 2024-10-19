@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 import { cartModel } from "./models/cart.model.js";
 import ProductManager from "./ProductManager.js";
+import UserManager from "./UserManager.js";
 
 const productManagerToCarrito = new ProductManager();
-
+const userManager = new UserManager();
 
 export default class CartManager{
     constructor(){
@@ -24,7 +25,7 @@ export default class CartManager{
             //crear un nuevo carrito si no existe
             const newCart = new cartModel({ userId, products: [] });
             await newCart.save();
-            await userManager.updateUserCartId(userId, newCart._id); // este método actualiza el cartId en el usuario
+            await userManager.updateUser(userId, newCart._id); // este método actualiza el cartId en el usuario
             return newCart;
         } catch (error) {
             console.error("Error al agregar carrito nuevo: ", error);
@@ -161,10 +162,10 @@ export default class CartManager{
             }
 
 
-       // Buscamos el carrito del usuario usando el userId
+       // buscamos el carrito del usuario usando el userId
        let cart = await cartModel.findOne({ userId });
 
-       // Si no existe un carrito, lo creamos
+       // si no existe un carrito, lo creamos
        if (!cart) {
            cart = new cartModel({ userId, products: [] });
            await cart.save();

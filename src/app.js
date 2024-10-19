@@ -13,6 +13,7 @@ import cartsRoutes from "./routes/carts.routes.js"
 import __dirname from "./utils.js";
 import viewRouter from "./routes/views.routes.js";
 import userRouter from "./routes/users.routes.js";
+import passport from "./config/passport.config.js";
 
 import { productModel } from "./service/models/product.model.js";
 
@@ -58,8 +59,12 @@ const sessionMiddleware = session({
 });
 
 app.use(sessionMiddleware);
-
 app.use(cookieParser())
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 //-------inicializamos el motor de plantilla----------
 app.engine("handlebars",handlebars.engine());
@@ -93,10 +98,10 @@ const httpServer = app.listen((PORT), ()=>{
 //abrimos canal de comunicació del lado del server
 const socketServer = new Server(httpServer)
 
-
-
 // Compartir la sesión con socket.io
-socketServer.use(sharedsession(sessionMiddleware));
+socketServer.use(sharedsession(sessionMiddleware,{
+    autoSave: true
+}));
 
 
 
@@ -105,6 +110,7 @@ socketServer.use(sharedsession(sessionMiddleware));
 
 socketServer.on("connection", socket => {
 //toda la logica referida a socket va acá adentro
+console.log("Sesión del socket al conectar:", socket.handshake.session);
     if (socket.handshake.session.user) {
         socket.emit("userData", socket.handshake.session.user);
     }
@@ -175,12 +181,11 @@ socketServer.on("connection", socket => {
                 throw new Error("Usuario no autenticado");
             }
             const user = socket.handshake.session.user;
-            const cartId = user.cartId;
             const productId = data.productId;
             
-            await cartManager.addToCart(cartId, productId);
+            const cart = await cartManager.addProductToCart(user.cartId, productId);
             
-            socket.emit("cartUpdated", "Producto agregado al carrito exitosamente.");
+            socket.emit("cartUpdated", "Producto agregado al carrito exitosamente.", cart);
         } catch (error) {
             console.log("Error al agregar producto al carrito:", error);
             socket.emit("cartError", error.message);

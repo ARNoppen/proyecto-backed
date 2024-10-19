@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import ProductManager from "../service/ProductManager.js";
 import UserManager from "../service/UserManager.js";
 import CartManager from "../service/CartManager.js";
+import passport from "../config/passport.config.js";
 
 const router = express.Router()
 const productManager = new ProductManager(); 
@@ -17,16 +18,22 @@ router.get("/login", (req, res) => {
     });
 });
 
-router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    const user = await userManager.getUserByEmail(email);
+router.post("/login", (req, res, next) => {
+    passport.authenticate("login", (err, user, info) => {
+        if (err || !user) {
+            return res.status(401).json({ success: false, message: info.message });
+        }
 
-    if (user && bcrypt.compareSync(password, user.password)) {
-        req.session.user = user;  // guardamos al usuario en la sesión
-        res.redirect("/products");
-    } else {
-        res.status(401).send("Usuario o contraseña incorrectos");
-    }
+        req.logIn(user, (err) => {
+            if (err) {
+                return res.status(401).json({ success: false, message: err.message });
+            }
+            // guarda la información del usuario en la sesión
+            req.session.user = user;
+            console.log("Sesión después de iniciar sesión:", req.session);
+            return res.json({ success: true, message: "Inicio de sesión exitoso" });
+        });
+    })(req, res, next);
 });
 
 router.get("/register", (req, res) => {
@@ -35,39 +42,26 @@ router.get("/register", (req, res) => {
     });
 });
 
-router.post("/register", async (req, res) => {
-    const { first_name, last_name, email, password, age } = req.body;
-
-    try {
-        // crea un nuevo usuario primero
-        const newUser = await userManager.addUser({ 
-            first_name, 
-            last_name, 
-            email, 
-            password, 
-            age
-        });
-
-        // crea un nuevo carrito solo si el usuario no tiene uno
-        const newCart = await cartManager.addCart(newUser._id);
-        newUser.cartId = newCart._id;
-        await newUser.save();
-
-        res.json({ success: true, message: "Usuario registrado exitosamente" });
-        
-    } catch (error) {
-        console.log("Error al registrar el usuario:", error);
-        if (error.code === 11000) {
-            return res.status(400).json({ success: false, message: "El email ya está en uso. Favor intentar con otro." });
+router.post("/register", async (req, res, next) => {
+    passport.authenticate("register", async (err, user, info) => {
+        if (err) return next(err);
+        if (!user) {
+            return res.status(400).json({ success: false, message: info.message });
         }
-        res.status(500).json({ success: false, message: "Error al registrar usuario" });
-    }
-});
 
-router.get("/changepassword", (req,res)=>{
-    res.render("changePassword", {
-        style: "index.css" 
-    });
+        try {
+            const newCart = await cartManager.addCart(user._id); // usa el userId del usuario recién creado
+            user.cartId = newCart._id;
+            await user.save();
+
+            req.logIn(user, (err) => {
+                if (err) return next(err);
+                return res.json({ success: true, message: "Usuario registrado y carrito creado exitosamente" });
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Error al crear el carrito para el usuario", error: error.message });
+        }
+    })(req, res, next);
 });
 
 router.post("/changepassword", async (req, res) => {
@@ -95,11 +89,10 @@ router.post("/changepassword", async (req, res) => {
 
 //middleware para proteger /products y /realTimeProducts
 function authMiddleware(req, res, next) {
-    if (req.session && req.session.user) {
-        next();
-    } else {
-        res.redirect("/login");
+    if (req.isAuthenticated()) {
+        return next();
     }
+    res.redirect('/login');
 }
 router.get("/products", authMiddleware, async (req,res)=>{
     try{
