@@ -24,6 +24,7 @@ export default class CartManager{
             //crear un nuevo carrito si no existe
             const newCart = new cartModel({ userId, products: [] });
             await newCart.save();
+            await userManager.updateUserCartId(userId, newCart._id); // este método actualiza el cartId en el usuario
             return newCart;
         } catch (error) {
             console.error("Error al agregar carrito nuevo: ", error);
@@ -136,11 +137,13 @@ export default class CartManager{
 
     async getCartById(cartId) {
         try {
+            console.log("Buscando carrito con ID:", cartId);
             const cart = await cartModel.findById(cartId).populate("products.product").exec();
             if (!cart) {
-                console.log("Carrito no encontrado");
+                console.log("Carrito no encontrado para el ID:", cartId);
                 return null;
             }
+            console.log("Carrito encontrado:", cart);
             return cart;
         } catch (error) {
             console.error("Error al obtener el carrito por ID:", error);
@@ -148,7 +151,7 @@ export default class CartManager{
         }
     };
 
-    async addToCart(cartId, productId) {
+    async addToCart(userId, productId) {
         try {
             // verificamos si el producto existe en la base de datos
             const product = await productManagerToCarrito.getProductById(productId);
@@ -158,13 +161,14 @@ export default class CartManager{
             }
 
 
-        // buscamos el carrito utilizando el cartId
-        let cart = await cartModel.findById(cartId);
+       // Buscamos el carrito del usuario usando el userId
+       let cart = await cartModel.findOne({ userId });
 
-        if (!cart) {
-            console.log("Carrito no encontrado para el ID proporcionado:", cartId);
-            return null;
-        }
+       // Si no existe un carrito, lo creamos
+       if (!cart) {
+           cart = new cartModel({ userId, products: [] });
+           await cart.save();
+       }
 
         // verificamos si el producto ya está en el carrito
         const existingProduct = cart.products.find(elem => elem.product.toString() === productId);

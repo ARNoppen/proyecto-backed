@@ -64,6 +64,34 @@ router.post("/register", async (req, res) => {
     }
 });
 
+router.get("/changepassword", (req,res)=>{
+    res.render("changePassword", {
+        style: "index.css" 
+    });
+});
+
+router.post("/changepassword", async (req, res) => {
+    const { email, newPassword } = req.body;
+    
+    try {
+        const user = await userManager.getUserByEmail(email);
+
+        if (user) {
+            const saltRounds = 10;
+            const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
+
+            // Actualizamos solo la contraseña del usuario
+            await userManager.updateUser(user._id, { password: hashedPassword });
+
+            res.redirect("/products");
+        } else {
+            res.status(401).send("Email no encontrado");
+        }
+    } catch (error) {
+        console.error("Error al cambiar la contraseña:", error);
+        res.status(500).send("Error al cambiar la contraseña");
+    }
+});
 
 //middleware para proteger /products y /realTimeProducts
 function authMiddleware(req, res, next) {

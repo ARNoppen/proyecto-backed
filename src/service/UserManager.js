@@ -37,6 +37,10 @@ export default class UserManager {
     async addUser(user){
         try {
             const saltRounds = 10;
+            console.log("Contraseña recibida para hashear:", user.password);
+            if (!user.password) {
+                throw new Error("La contraseña es requerida para crear el usuario.");
+            }
             user.password = bcrypt.hashSync(user.password, saltRounds);
             const newUser = new userModel(user)
             return await newUser.save()

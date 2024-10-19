@@ -28,7 +28,7 @@ dotenv.config();
 
 //----declaramos express----
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8090;
 
 //--------colocamos middleware a nivel aplicación (sirve para mostrarle predeterminadamente como va a trabajar en el código)------
 //prepara la configuración del servidor para trabajar con archivos JSON
