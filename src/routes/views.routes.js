@@ -64,6 +64,13 @@ router.post("/register", async (req, res, next) => {
     })(req, res, next);
 });
 
+
+router.get("/changepassword", (req, res) => {
+    res.render("changePassword", {
+        style: "index.css"
+    });
+});
+
 router.post("/changepassword", async (req, res) => {
     const { email, newPassword } = req.body;
     
