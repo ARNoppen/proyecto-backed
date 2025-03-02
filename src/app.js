@@ -191,6 +191,22 @@ console.log("Sesión del socket al conectar:", socket.handshake.session);
             socket.emit("cartError", error.message);
         }
     });
+
+    socket.on("deleteAllProducts", async data => {
+        try {
+            const { cartId } = data;
+            if (!cartId) {
+                throw new Error("Carrito no encontrado");
+            }
+
+            const cart = await cartManager.deleteAllProduct(cartId);
+
+            socket.emit("cartUpdated", "Productos eliminados del carrito exitosamente.", cart);
+        } catch (error) {
+            console.log("Error al eliminar productos del carrito:", error);
+            socket.emit("cartError", error.message);
+        }
+    });
 });
 
 
