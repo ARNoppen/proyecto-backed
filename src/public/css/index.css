@@ -1,9 +1,95 @@
-body{
-    background-color: #ADD8E6;
-}
-
-p{
-    color: black;
-    font-size: 30px;
-}
+/* Reset básico para eliminar márgenes y padding por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Estilo global del body */
+  body {
+    background-color: #ADD8E6; 
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+  }
+  
+  /* Estilo para párrafos */
+  p {
+    color: #333;
+    font-size: 18px;  
+    margin-bottom: 15px;
+  }
+  
+  /* Un contenedor central para organizar el contenido */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  /* Encabezado */
+  header {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Estilos para enlaces (por ejemplo, en el menú) */
+  a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Botones */
+  button, .btn {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  button:hover, .btn:hover {
+    background: #0056b3;
+  }
+  
+  /* Formularios: inputs, textareas, etc. */
+  form {
+    background: #fff;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  form input,
+  form textarea,
+  form select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Diseño responsive */
+  @media (max-width: 768px) {
+    .container {
+      width: 95%;
+    }
+  }
 
