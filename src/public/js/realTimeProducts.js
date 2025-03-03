@@ -61,13 +61,20 @@ socket.on("productLogs", data => {
                 Categoría: ${log.category}
                 `
                 if (user.role === "admin") {
-                    logs += `<button onclick="deleteProduct('${log._id}')">Eliminar</button>`;
+                    logs += `
+                    <button onclick="updateProduct('${log._id}')">Actualizar Art.</button> 
+                    <button onclick="deleteProduct('${log._id}')">Eliminar</button>`;
                 }
-                `</br>`
+                logs += "</br>";
                 
     });
     productsLog.innerHTML = logs;
 });
+
+// Función para redirigir a la vista de edición
+function updateProduct(productId) {
+    window.location.href = `/products/${productId}`;
+  }
 
 deleteProduct = (id) => {
     socket.emit("deleteProduct", id);

@@ -19,10 +19,17 @@ document.querySelector("form").addEventListener("submit", async function (event)
         const result = await response.json();
 
         if (result.success) {
-            Swal.fire("Éxito", result.message, "success");
-            setTimeout(() => {
-                window.location.href = "/products"; // redirigir después de mostrar el mensaje de éxito
-            }, 3000);
+            Swal.fire({
+                title: "Éxito",
+                text: result.message,
+                icon: "success",
+                timer: 2000, // La alerta se cerrará automáticamente en 2 segundos
+                showConfirmButton: true, // Asegura que haya botón de confirmación
+                allowOutsideClick: true, // Permite cerrar al hacer clic fuera
+                willClose: () => {
+                    window.location.href = "/products"; // Redirigir cuando la alerta se cierre
+                }
+            });
         } else {
             Swal.fire("Error", result.message, "error");
         }

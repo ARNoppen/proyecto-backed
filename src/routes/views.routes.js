@@ -4,6 +4,7 @@ import ProductManager from "../service/ProductManager.js";
 import UserManager from "../service/UserManager.js";
 import CartManager from "../service/CartManager.js";
 import passport from "../config/passport.config.js";
+import { authMiddleware, adminMiddleware } from "../middleware/auth.js";
 
 const router = express.Router()
 const productManager = new ProductManager(); 
@@ -94,13 +95,8 @@ router.post("/changepassword", async (req, res) => {
     }
 });
 
-//middleware para proteger /products y /realTimeProducts
-function authMiddleware(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/login');
-}
+
+
 router.get("/products", authMiddleware, async (req,res)=>{
     try{
         const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
@@ -121,17 +117,22 @@ router.get("/products", authMiddleware, async (req,res)=>{
 // ruta para obtener un producto individual
 router.get("/products/:pid", authMiddleware, async (req, res) => {
     try {
-        const productId = req.params.pid;
-        const product = await productManager.getProductById(productId);
-
-        res.render("product", {
-            product: product,
-            style: "index.css"
-        });
+      const productId = req.params.pid;
+      const product = await productManager.getProductById(productId);
+      
+      if (!product) {
+        return res.status(404).send("Producto no encontrado");
+      }
+  
+      res.render("product", {
+        product: product,
+        user: req.session.user,  // Pasamos el usuario a la vista
+        style: "index.css",
+      });
     } catch (error) {
-        console.log("Error al obtener producto individual:", error);
+      console.log("Error al obtener producto individual:", error);
     }
-});
+  });
 
 // ruta para obtener un carrito específico
 router.get("/carts/:cid", authMiddleware, async (req, res) => {
@@ -152,7 +153,7 @@ router.get("/carts/:cid", authMiddleware, async (req, res) => {
     }
 });
 
-router.get("/realtimeproducts", authMiddleware, (req, res) => {
+router.get("/realtimeproducts", authMiddleware, adminMiddleware, (req, res) => {
     res.render("realTimeProducts", {
         style: "index.css",
         user: req.session.user

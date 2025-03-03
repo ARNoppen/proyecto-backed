@@ -1,16 +1,47 @@
 <div>
     <h1>{{product.title}}</h1>
+
     <p><b>Descripción:</b> {{product.description}}</p>
     <p><b>Código:</b> {{product.code}}</p>
     <p><b>Precio:</b> ${{product.price}}</p>
     <p><b>Stock:</b> {{product.stock}}</p>
     <p><b>Categoría:</b> {{product.category}}</p>
+
+    {{#if (eq user.role "admin")}}
+      <button id="editButton">Editar Artículo</button>
+    {{/if}}
+
     <button onclick="addToCart('{{product._id}}')">Agregar al carrito</button>
-    <button onclick="window.location.href='/products'"> Volver </button>
+    <button onclick="window.location.href='/products'">Volver</button>
+
+
+    <!-- Formulario oculto por defecto -->
+    <form id="updateProductForm" style="display: none;">
+        <label><b>Título:</b></label>
+        <input type="text" id="title" value="{{product.title}}">
+
+        <label><b>Descripción:</b></label>
+        <textarea id="description">{{product.description}}</textarea>
+
+        <label><b>Código:</b></label>
+        <input type="text" id="code" value="{{product.code}}">
+
+        <label><b>Precio:</b></label>
+        <input type="number" id="price" value="{{product.price}}">
+
+        <label><b>Stock:</b></label>
+        <input type="number" id="stock" value="{{product.stock}}">
+
+        <label><b>Categoría:</b></label>
+        <input type="text" id="category" value="{{product.category}}">
+
+        <button type="submit">Guardar cambios</button>
+        <button type="button" id="cancelButton">Cancelar</button>
+    </form>
+
+    <p id="message" style="color: green; display: none;"></p>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/product.js"></script>  
-
-{{!--Para poder usar Sweetalert--}}
+<script src="/js/product.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

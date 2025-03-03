@@ -2,7 +2,9 @@ import { response, Router } from "express";
 import { uploader } from "../utils.js";
 import ProductManager from "../service/ProductManager.js";
 import { productModel } from "../service/models/product.model.js";
-
+import { adminMiddleware } from "../middleware/auth.js";
+// Importamos la instancia de Socket.io desde `app.js`
+import { socketServer } from "../app.js"; 
 const router = Router();
 const productManager = new ProductManager();
 
@@ -107,20 +109,26 @@ router.post("/", async (req,res)=>{
 
 
 //PUT
-router.put("/:pid", async (req,res)=>{
-    try {               //capturamos el id que coloquen en la URL
+router.put("/:pid", adminMiddleware, async (req, res) => {
+    try {
         const productId = req.params.pid;
-        const updateProduct = await productManager.updateProduct(productId, req.body);
-        if(updateProduct){
-            res.json(updateProduct)
-        }else{
-            res.status(404).json({error: "Producto no encontrado"})
+        const updateFields = req.body;
+
+        const updatedProduct = await productManager.updateProduct(productId, updateFields);
+        
+        if (!updatedProduct) {
+            return res.status(404).json({ error: "Producto no encontrado" });
         }
+
+        // Emitimos un evento de actualización para todos los clientes conectados
+        socketServer.emit("productUpdated", { productId, updatedProduct });
+
+        res.json({ success: true, message: "Producto actualizado correctamente" });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Error interno del servidor (PUT products.routes.js)" });
+        console.log("Error al actualizar producto:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
     }
-})
+});
 
 
 

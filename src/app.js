@@ -66,19 +66,27 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
+// Configuración de Handlebars con el helper "eq"
+const hbs = handlebars.create({
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true,
+    },
+    helpers: {
+      eq: function (a, b) {
+        return a === b;
+      },
+    },
+  });
+
+
 //-------inicializamos el motor de plantilla----------
-app.engine("handlebars",handlebars.engine());
+app.engine("handlebars",hbs.engine);
 //indicamos en que parte del proyecto estarán las vistas (Usar rutas absolutas)
 app.set("views",__dirname+"/views/");
 //para indicarle que el motor que inicializamos arriba es el que equeremos usar
 app.set("view engine","handlebars");
 
-app.engine("handlebars", handlebars.engine({
-    runtimeOptions: {
-    allowProtoPropertiesByDefault: true,
-    allowProtoMethodsByDefault: true
-    }
-}));
 
 
 //----------Endpoints (Rutas) que tenemos configuradas en nuestro proyecto---------
@@ -103,7 +111,8 @@ socketServer.use(sharedsession(sessionMiddleware,{
     autoSave: true
 }));
 
-
+// Exportamos `socketServer` para usarlo en otros archivos
+export { socketServer };
 
 
 //--------------------------------- WEB SOCKET ---------------------------------
