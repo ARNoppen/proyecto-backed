@@ -1,27 +1,28 @@
-<div>
-    <div>
-        <a href="/products"> Volver 🔙  </a>
-        <h2> - </h2>
-    </div>
+<div id="cart-container" data-cart-id="{{cart._id}}">
     <h1>Estos son los productos en tu carrito!</h1>
 
     <ul>
         {{#if cart.products.length}}
             {{#each cart.products}}
                 <li>
-                    <b>Artículo: </b> {{this.product.title}} - <b>Cantidad:</b> {{this.quantity}}  -  <b>Precio:</b> ${{this.product.price}}
-                </li>
-            {{/each}}
-            <button onclick="deleteAllProducts('{{cart._id}}')">Vaciar carrito</button>
-        {{else}}    
-            <p>Tu carrito está vacío.</p>
-        {{/if}}
-    </ul>
-</div>
+                    <b>Artículo: </b> {{this.product.title}} /
+                    <b>Precio:</b> ${{this.product.price}} /
+                    <b>Cantidad:</b> <span id="qty-{{this.product._id}}">{{this.quantity}}</span>
 
-{{!--Para poder usar Sweetalert--}}
+                <!-- Botones para modificar la cantidad -->
+                <button onclick="updateQuantity('{{this.product._id}}', '{{cart._id}}', -1)">➖</button>
+                <button onclick="updateQuantity('{{this.product._id}}', '{{cart._id}}', 1)">➕</button>
+
+                    <!-- Botón para eliminar producto -->
+                    <button onclick="removeFromCart('{{this.product._id}}')">Eliminar</button>
+            </li>
+        {{/each}}
+        <button onclick="deleteAllProducts('{{cart._id}}')">Vaciar carrito</button>
+    {{else}}    
+        <p>Tu carrito está vacío.</p>
+    {{/if}}
+</ul>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-{{!-- Traigo dos scripts que hacen referencia al uso de sockets--}}
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/cart.js"></script>

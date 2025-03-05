@@ -216,6 +216,24 @@ console.log("Sesión del socket al conectar:", socket.handshake.session);
             socket.emit("cartError", error.message);
         }
     });
+
+    // Manejador de eventos para eliminar un producto del carrito
+    socket.on("removeFromCart", async ({ cartId, productId }) => {
+        try {
+            const updatedCart = await cartManager.deleteProduct(cartId, productId);
+
+            if (!updatedCart) {
+                socket.emit("cartError", "No fue posible eliminar el producto.");
+                return;
+            }
+
+            //  Emitimos el carrito actualizado a todos los clientes conectados
+            socketServer.emit("cartUpdated", updatedCart);
+        } catch (error) {
+            console.error("Error al eliminar producto del carrito:", error);
+            socket.emit("cartError", "Error al eliminar el producto.");
+        }
+    });
 });
 
 

@@ -67,6 +67,12 @@
     background: #0056b3;
   }
   
+
+
+
+
+
+
   /* Formularios: inputs, textareas, etc. */
   form {
     background: #fff;
@@ -86,6 +92,8 @@
     border-radius: 4px;
   }
   
+  
+
   /* Diseño responsive */
   @media (max-width: 768px) {
     .container {
