@@ -98,16 +98,3 @@ socket.on("userConnect", data => {
 
 
 
-
-// cerrar chat
-
-const closeProductBox = document.getElementById("closeProductBox")
-closeProductBox.addEventListener("click", event => {
-    Swal.fire({
-        icon: "succes",
-        title: "Gracias ingresar a la página!! chau.",
-        color: "blue",
-    })
-    socket.emit("closeProduct", {close: "closed"})
-    productsLog.innerHTML = "";
-})

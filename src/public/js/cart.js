@@ -16,7 +16,7 @@ async function updateQuantity(productId, cartId, change) {
 
     // Evita que la cantidad baje de 1
     if (newQuantity < 1) {
-        Swal.fire("Error", "La cantidad debe ser mayor que 0.", "error");
+        Swal.fire("Error", "La cantidad debe ser mayor que 1.", "error");
         return;
     }
 

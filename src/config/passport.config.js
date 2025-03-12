@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcrypt";
-import { userModel } from "../service/models/user.model.js";
+import { userModel } from "../dao/models/user.model.js";
 
 
 // estrategia de registro

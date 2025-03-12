@@ -1,70 +1,61 @@
-import { userModel } from "./models/user.model.js";
-import bcrypt from "bcrypt";
+import UserDAO from "../dao/mongo/UserDAO.js";
 
-export default class UserManager { 
-    constructor(){
+export default class UserManager {
+    constructor() {
+        this.userDAO = new UserDAO();
     }
-    //metodos
-    async getAllUser(limit){
+
+    async getAllUsers(limit) {
         try {
-            const query = {};
-            const options = limit ? { limit: parseInt(limit) } : {};
-            return await userModel.find(query, null, options).exec();
+            return await this.userDAO.getAllUsers(limit);
         } catch (error) {
-            console.error("Error al obtener usuarios: ", error);
+            console.error("Error en UserManager mirar funcion getAllUsers:", error);
             throw error;
         }
     }
 
-    async getAllUserById(id){
+    async getUserById(id) {
         try {
-            return await userModel.findById(id).exec()
+            return await this.userDAO.getUserById(id);
         } catch (error) {
-            console.error("Error al obtener usuarios: ",error);
+            console.error("Error en UserManager mirar funcion getUserById:", error);
             throw error;
         }
     }
 
     async getUserByEmail(email) {
         try {
-            return await userModel.findOne({ email }).exec();
+            return await this.userDAO.getUserByEmail(email);
         } catch (error) {
-            console.error("Error al obtener usuario por email:", error);
+            console.error("Error en UserManager mirar funcion getUserByEmail:", error);
             throw error;
         }
     }
 
-    async addUser(user){
+    async addUser(user) {
         try {
-            const saltRounds = 10;
-            console.log("Contraseña recibida para hashear:", user.password);
-            if (!user.password) {
-                throw new Error("La contraseña es requerida para crear el usuario.");
-            }
-            user.password = bcrypt.hashSync(user.password, saltRounds);
-            const newUser = new userModel(user)
-            return await newUser.save()
+            return await this.userDAO.addUser(user);
         } catch (error) {
-            console.error("Error al agregar usuarios: ",error);
+            console.error("Error en UserManager mirar funcion addUser:", error);
             throw error;
         }
     }
 
-    async updateUser(id, updateFields){
+    async updateUser(id, updateFields) {
         try {
-            return await userModel.findByIdAndUpdate(id, updateFields, {new: true}).exec();
+            return await this.userDAO.updateUser(id, updateFields);
         } catch (error) {
-            console.error("Error al actualizar usuarios: ",error);
+            console.error("Error en UserManager mirar funcion updateUser:", error);
             throw error;
         }
     }
 
-    async deleteUser(id){
+    async deleteUser(id) {
         try {
-            return await userModel.findByIdAndDelete(id).exec();
+            return await this.userDAO.deleteUser(id);
         } catch (error) {
-            console.error("Error al eliminar usuarios: ",error);
+            console.error("Error en UserManager mirar funcion deleteUser:", error);
             throw error;
         }
     }
-};
+}

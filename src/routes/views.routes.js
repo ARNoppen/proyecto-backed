@@ -41,7 +41,7 @@ router.get("/register", (req, res) => {
     res.render("register", {
         style: "index.css" 
     });
-});
+}); 
 
 router.post("/register", async (req, res, next) => {
     passport.authenticate("register", async (err, user, info) => {
@@ -138,7 +138,7 @@ router.get("/products/:pid", authMiddleware, async (req, res) => {
 router.get("/carts/:cid", authMiddleware, async (req, res) => {
     try {
         const cartId = req.params.cid;
-        const cart = await cartManager.getCartById(cartId);
+        const cart = await cartManager.getCart(cartId);
 
         if (!cart) {
             return res.status(404).send("Carrito no encontrado");

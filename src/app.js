@@ -15,7 +15,7 @@ import viewRouter from "./routes/views.routes.js";
 import userRouter from "./routes/users.routes.js";
 import passport from "./config/passport.config.js";
 
-import { productModel } from "./service/models/product.model.js";
+import { productModel } from "./dao/models/product.model.js";
 
 import ProductManager from "./service/ProductManager.js";
 import UserManager from "./service/UserManager.js";
@@ -178,11 +178,6 @@ console.log("Sesión del socket al conectar:", socket.handshake.session);
         }
     });
 
-    socket.on("closeProduct", data => {
-        if(data.close === "closed"){
-            socket.disconnect();
-        }
-    });
 
     socket.on("addToCart", async data => {
         try {

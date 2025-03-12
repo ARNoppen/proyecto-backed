@@ -1,7 +1,7 @@
 import { response, Router } from "express";
 import { uploader } from "../utils.js";
 import ProductManager from "../service/ProductManager.js";
-import { productModel } from "../service/models/product.model.js";
+import { productModel } from "../dao/models/product.model.js";
 import { adminMiddleware } from "../middleware/auth.js";
 // Importamos la instancia de Socket.io desde `app.js`
 import { socketServer } from "../app.js"; 
