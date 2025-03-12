@@ -1,3 +1,6 @@
+// DAO: Se comunica con la base de datos yo uso MongoDB pero podría ser cualquiera(MySQL, Firebase, etc.). Devuelve datos tal cual están en la base.
+
+
 import { productModel } from "../models/product.model.js";
 
 export default class ProductDAO {

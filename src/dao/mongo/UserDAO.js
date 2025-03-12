@@ -1,3 +1,6 @@
+// DAO: Se comunica con la base de datos yo uso MongoDB pero podría ser cualquiera(MySQL, Firebase, etc.). Devuelve datos tal cual están en la base.
+
+
 import { userModel } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 

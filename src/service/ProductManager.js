@@ -1,13 +1,15 @@
-import ProductDAO from "../dao/mongo/ProductDAO.js";
+// Manager: Aplica reglas de negocio y decide qué hacer con los datos procesados por el Repository antes de enviarlos al controlador.
+
+import ProductRepository from "../repositories/ProductRepository.js";
 
 export default class ProductManager {
     constructor() {
-        this.productDAO = new ProductDAO();
+        this.productRepository = new ProductRepository();
     }
 
     async getAllProducts(query = {}, options = {}) {
         try {
-            return await this.productDAO.getAllProducts(query, options);
+            return await this.productRepository.getAllProducts(query, options);
         } catch (error) {
             console.error("Error en ProductManager mirar funcion getAllProducts:", error);
             throw error;
@@ -16,7 +18,7 @@ export default class ProductManager {
 
     async getProductById(id) {
         try {
-            return await this.productDAO.getProductById(id);
+            return await this.productRepository.getProductById(id);
         } catch (error) {
             console.error("Error en ProductManager mirar funcion getProductById:", error);
             throw error;
@@ -25,7 +27,7 @@ export default class ProductManager {
 
     async addProduct(product) {
         try {
-            return await this.productDAO.addProduct(product);
+            return await this.productRepository.addProduct(product);
         } catch (error) {
             console.error("Error en ProductManager mirar funcion addProduct:", error);
             throw error;
@@ -34,7 +36,7 @@ export default class ProductManager {
 
     async updateProduct(id, updateFields) {
         try {
-            return await this.productDAO.updateProduct(id, updateFields);
+            return await this.productRepository.updateProduct(id, updateFields);
         } catch (error) {
             console.error("Error en ProductManager mirar funcion updateProduct:", error);
             throw error;
@@ -43,7 +45,7 @@ export default class ProductManager {
 
     async deleteProduct(id) {
         try {
-            return await this.productDAO.deleteProduct(id);
+            return await this.productRepository.deleteProduct(id);
         } catch (error) {
             console.error("Error en ProductManager mirar funcion deleteProduct:", error);
             throw error;

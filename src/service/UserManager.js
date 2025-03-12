@@ -1,13 +1,15 @@
-import UserDAO from "../dao/mongo/UserDAO.js";
+// Manager: Aplica reglas de negocio y decide qué hacer con los datos procesados por el Repository antes de enviarlos al controlador.
+
+import UserRepository from "../repositories/UserRepository.js";
 
 export default class UserManager {
     constructor() {
-        this.userDAO = new UserDAO();
+        this.userRepository = new UserRepository();
     }
 
     async getAllUsers(limit) {
         try {
-            return await this.userDAO.getAllUsers(limit);
+            return await this.userRepository.getAllUsers(limit);
         } catch (error) {
             console.error("Error en UserManager mirar funcion getAllUsers:", error);
             throw error;
@@ -16,7 +18,7 @@ export default class UserManager {
 
     async getUserById(id) {
         try {
-            return await this.userDAO.getUserById(id);
+            return await this.userRepository.getUserById(id);
         } catch (error) {
             console.error("Error en UserManager mirar funcion getUserById:", error);
             throw error;
@@ -25,7 +27,7 @@ export default class UserManager {
 
     async getUserByEmail(email) {
         try {
-            return await this.userDAO.getUserByEmail(email);
+            return await this.userRepository.getUserByEmail(email);
         } catch (error) {
             console.error("Error en UserManager mirar funcion getUserByEmail:", error);
             throw error;
@@ -34,7 +36,7 @@ export default class UserManager {
 
     async addUser(user) {
         try {
-            return await this.userDAO.addUser(user);
+            return await this.userRepository.addUser(user);
         } catch (error) {
             console.error("Error en UserManager mirar funcion addUser:", error);
             throw error;
@@ -43,7 +45,7 @@ export default class UserManager {
 
     async updateUser(id, updateFields) {
         try {
-            return await this.userDAO.updateUser(id, updateFields);
+            return await this.userRepository.updateUser(id, updateFields);
         } catch (error) {
             console.error("Error en UserManager mirar funcion updateUser:", error);
             throw error;
@@ -52,7 +54,7 @@ export default class UserManager {
 
     async deleteUser(id) {
         try {
-            return await this.userDAO.deleteUser(id);
+            return await this.userRepository.deleteUser(id);
         } catch (error) {
             console.error("Error en UserManager mirar funcion deleteUser:", error);
             throw error;
