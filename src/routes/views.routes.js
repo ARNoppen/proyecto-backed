@@ -6,6 +6,7 @@ import CartManager from "../service/CartManager.js";
 import passport from "../config/passport.config.js";
 import { authMiddleware, adminMiddleware } from "../middleware/auth.js";
 import TicketManager from "../service/TicketManager.js";
+import { formatDateTime } from "../utils.js";
 
 const router = express.Router()
 const productManager = new ProductManager(); 
@@ -172,8 +173,13 @@ router.get("/ticket/:tid", async (req, res) => {
             return res.status(404).send("Ticket no encontrado");
         }
 
+        const formattedDateTime = formatDateTime(ticket.purchase_datetime);
+
         res.render("ticket", {
-            ticket: ticket,
+            ticket: {
+                ...ticket._doc,
+                purchase_datetime: formattedDateTime
+            },
             style: "index.css"
         });
     } catch (error) {
