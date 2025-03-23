@@ -18,6 +18,7 @@
             </li>
         {{/each}}
         <button onclick="deleteAllProducts('{{cart._id}}')">Vaciar carrito</button>
+        <button onclick="finishPurchase('{{cart._id}}')">Finalizar compra</button>
     {{else}}    
         <p>Tu carrito está vacío.</p>
     {{/if}}
@@ -26,3 +27,4 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/cart.js"></script>
+<script src="/js/ticket.js"></script>

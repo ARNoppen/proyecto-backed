@@ -5,12 +5,13 @@ import UserManager from "../service/UserManager.js";
 import CartManager from "../service/CartManager.js";
 import passport from "../config/passport.config.js";
 import { authMiddleware, adminMiddleware } from "../middleware/auth.js";
+import TicketManager from "../service/TicketManager.js";
 
 const router = express.Router()
 const productManager = new ProductManager(); 
 const userManager = new UserManager();
 const cartManager = new CartManager();
-
+const ticketManager = new TicketManager();
 
 
 router.get("/login", (req, res) => {
@@ -161,6 +162,25 @@ router.get("/realtimeproducts", authMiddleware, adminMiddleware, (req, res) => {
 });
 
 
+// ruta para obtener un ticket específico
+router.get("/ticket/:tid", async (req, res) => {
+    try {
+        const ticketId = req.params.tid;
+        const ticket = await ticketManager.getTicketById(ticketId);
+
+        if (!ticket) {
+            return res.status(404).send("Ticket no encontrado");
+        }
+
+        res.render("ticket", {
+            ticket: ticket,
+            style: "index.css"
+        });
+    } catch (error) {
+        console.error("Error al obtener el ticket:", error);
+        res.status(500).send("Error interno del servidor al obtener el ticket");
+    }
+});
 
 
 export default router;

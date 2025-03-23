@@ -2,9 +2,13 @@ import { Router } from "express";
 // multer import { uploader } from "../utils.js";
 import CartManager from "../service/CartManager.js";
 import { socketServer } from "../app.js";
+import ProductManager from "../service/ProductManager.js";
+import TicketManager from "../service/TicketManager.js";
 
 const router = Router();
 const cartManager = new CartManager();
+const productManager = new ProductManager();
+const ticketManager = new TicketManager();
 
 //GET
 router.get("/:cid", async (req, res) => {
@@ -16,7 +20,7 @@ router.get("/:cid", async (req, res) => {
             return res.status(404).json({ error: "Carrito no encontrado" });
         }
 
-        res.render("cart", { cart }); // 🔥 Asegurarse de pasar `cart` al template
+        res.render("cart", { cart }); //  Asegurarse de pasar "cart" al template
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: "Error interno del servidor (carts.routes.js)" });
@@ -53,6 +57,57 @@ router.post("/:cid/product/:pid", async (req,res) => {
     }
 })
 
+//POST realizar compra 
+router.post("/:cid/purchase", async (req, res) => {
+    try {
+        const cartId = req.params.cid;
+        const user = req.session.user;
+
+        const cart = await cartManager.getCart(cartId);
+        if (!cart) {
+            return res.status(404).json({ error: "Carrito no encontrado" });
+        }
+
+        let total = 0;
+        const productosFallidos = [];
+        const productosComprados = [];
+
+        for (const item of cart.products) {
+            const product = await productManager.getProductById(item.product._id);
+
+            if (product.stock >= item.quantity) {
+                product.stock -= item.quantity;
+                await productManager.updateProduct(product._id, { stock: product.stock });
+                total += product.price * item.quantity;
+                productosComprados.push(item);
+            } else {
+                productosFallidos.push(item);
+            }
+        }
+
+        if (productosComprados.length === 0) {
+            return res.status(400).json({
+                error: "No se pudo completar la compra. Todos los productos están sin stock",
+                productosFallidos,
+            });
+        }
+
+        const ticket = await ticketManager.createTicket({
+            amount: total,
+            purchaser: user.email,
+        });
+
+        // Filtramos el carrito dejando solo los que no se pudieron comprar
+        await cartManager.updateCart(cartId, productosFallidos);
+
+        // Redireccionamos directamente a la vista del ticket
+        return res.redirect(`/ticket/${ticket._id}`);
+
+    } catch (error) {
+        console.error("Error al procesar compra:", error);
+        res.status(500).json({ error: "Error interno al procesar la compra" });
+    }
+});
 
 
 //PUT actualizar el carrito con un arreglo de productos
