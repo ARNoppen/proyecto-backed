@@ -7,6 +7,7 @@ import passport from "../config/passport.config.js";
 import { authMiddleware, adminMiddleware } from "../middleware/auth.js";
 import TicketManager from "../service/TicketManager.js";
 import { formatDateTime } from "../utils.js";
+import __dirname from "../utils.js";
 
 const router = express.Router()
 const productManager = new ProductManager(); 
@@ -40,9 +41,7 @@ router.post("/login", (req, res, next) => {
 });
 
 router.get("/register", (req, res) => {
-    res.render("register", {
-        style: "index.css" 
-    });
+    res.sendFile(__dirname + "/public/vue/register/index.html");
 }); 
 
 router.post("/register", async (req, res, next) => {
