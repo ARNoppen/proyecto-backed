@@ -1,9 +1,11 @@
 import { json, Router } from "express";
 import UserManager  from "../service/UserManager.js";
+import passport from "../config/passport.config.js";
+import CartManager from "../service/CartManager.js";
 
 const router = Router();
 const userManager = new UserManager();
-
+const cartManager = new CartManager();
 
 //GET
 router.get("/", async (req,res) => {
@@ -35,7 +37,7 @@ router.get("/:uid", async (req,res) => {
 
 
 
-//POST
+//POST 
 router.post("/", async (req,res)=>{
     try {
         const { first_name, last_name, email, password, age} = req.body;
@@ -50,6 +52,28 @@ router.post("/", async (req,res)=>{
     }
 });
 
+// POST para registrar un nuevo usuario
+router.post("/register", async (req, res, next) => {
+    passport.authenticate("register", async (err, user, info) => {
+        if (err) return next(err);
+        if (!user) {
+            return res.status(400).json({ success: false, message: info.message });
+        }
+
+        try {
+            const newCart = await cartManager.addCart(user._id); // usa el userId del usuario recién creado
+            user.cartId = newCart._id;
+            await user.save();
+
+            req.logIn(user, (err) => {
+                if (err) return next(err);
+                return res.json({ success: true, message: "Usuario registrado y carrito creado exitosamente" });
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: "Error al crear el carrito para el usuario", error: error.message });
+        }
+    })(req, res, next);
+});
 
 
 //PUT by ID

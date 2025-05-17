@@ -143,7 +143,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
             return res.status(404).json({ error: "Carrito o producto no encontrado" });
         }
 
-        // 🔥 Emitimos un evento para actualizar la UI en tiempo real
+        // emitimos un evento para actualizar la UI en tiempo real
         socketServer.emit("cartUpdated");
         res.json({ success: true, cart: updatedCart });
     } catch (error) {
@@ -164,7 +164,7 @@ router.delete("/:cid", async (req, res) => {
             return res.status(404).json({ error: "No fue posible eliminar todos los productos del carrito." });
         }
 
-        // 🔥 Emitimos `cartUpdated` para actualizar la UI en tiempo real
+        //  emitimos `cartUpdated` para actualizar la UI en tiempo real
         socketServer.emit("cartUpdated");
 
         res.json(deleteAllProduct);
@@ -184,7 +184,7 @@ router.delete("/:cid/product/:pid", async (req, res) => {
             return res.status(404).json({ error: "No fue posible eliminar el producto del carrito." });
         }
 
-        // 🔥 Emitimos `cartUpdated` para que el frontend recargue la página
+        //  emitimos `cartUpdated` para que el frontend recargue la página
         socketServer.emit("cartUpdated");
 
         res.json(updatedCart);

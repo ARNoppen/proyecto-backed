@@ -40,31 +40,6 @@ router.post("/login", (req, res, next) => {
     })(req, res, next);
 });
 
-router.get("/register", (req, res) => {
-    res.sendFile(__dirname + "/public/vue/register/index.html");
-}); 
-
-router.post("/register", async (req, res, next) => {
-    passport.authenticate("register", async (err, user, info) => {
-        if (err) return next(err);
-        if (!user) {
-            return res.status(400).json({ success: false, message: info.message });
-        }
-
-        try {
-            const newCart = await cartManager.addCart(user._id); // usa el userId del usuario recién creado
-            user.cartId = newCart._id;
-            await user.save();
-
-            req.logIn(user, (err) => {
-                if (err) return next(err);
-                return res.json({ success: true, message: "Usuario registrado y carrito creado exitosamente" });
-            });
-        } catch (error) {
-            return res.status(500).json({ success: false, message: "Error al crear el carrito para el usuario", error: error.message });
-        }
-    })(req, res, next);
-});
 
 
 router.get("/changepassword", (req, res) => {
