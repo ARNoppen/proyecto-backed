@@ -22,53 +22,12 @@ router.get("/login", (req, res) => {
     });
 });
 
-router.post("/login", (req, res, next) => {
-    passport.authenticate("login", (err, user, info) => {
-        if (err || !user) {
-            return res.status(401).json({ success: false, message: info.message });
-        }
-
-        req.logIn(user, (err) => {
-            if (err) {
-                return res.status(401).json({ success: false, message: err.message });
-            }
-            // guarda la información del usuario en la sesión
-            req.session.user = user;
-            console.log("Sesión después de iniciar sesión:", req.session);
-            return res.json({ success: true, message: "Inicio de sesión exitoso" });
-        });
-    })(req, res, next);
-});
-
 
 
 router.get("/changepassword", (req, res) => {
     res.render("changePassword", {
         style: "index.css"
     });
-});
-
-router.post("/changepassword", async (req, res) => {
-    const { email, newPassword } = req.body;
-    
-    try {
-        const user = await userManager.getUserByEmail(email);
-
-        if (user) {
-            const saltRounds = 10;
-            const hashedPassword = bcrypt.hashSync(newPassword, saltRounds);
-
-            // Actualizamos solo la contraseña del usuario
-            await userManager.updateUser(user._id, { password: hashedPassword });
-
-            res.redirect("/products");
-        } else {
-            res.status(401).send("Email no encontrado");
-        }
-    } catch (error) {
-        console.error("Error al cambiar la contraseña:", error);
-        res.status(500).send("Error al cambiar la contraseña");
-    }
 });
 
 

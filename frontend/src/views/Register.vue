@@ -1,5 +1,3 @@
-
-
 <template>
   <div id="register-app">
     <h1>Registrarse</h1>
@@ -46,11 +44,7 @@ export default {
   methods: {
     async register() {
       if (
-        !this.form.first_name ||
-        !this.form.email ||
-        !this.form.password ||
-        !this.form.age
-      ) {
+        !this.form.first_name || !this.form.email || !this.form.password || !this.form.age){
         this.errorMsg = "Todos los campos marcados son obligatorios.";
         return;
       }
@@ -80,11 +74,11 @@ export default {
             this.$router.push("/login");
           });
         } else {
-          Swal.fire("Error", result.message, "error");
+            Swal.fire("Error", result.message, "error");
         }
       } catch (error) {
-        console.error("Error al registrar:", error);
-        Swal.fire("Error", "Ocurrió un error inesperado.", "error");
+          console.error("Error al registrar:", error);
+          Swal.fire("Error", "Ocurrió un error inesperado.", "error");
       }
     },
   },
