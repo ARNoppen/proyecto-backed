@@ -16,19 +16,6 @@ const cartManager = new CartManager();
 const ticketManager = new TicketManager();
 
 
-router.get("/login", (req, res) => {
-    res.render("login", {
-        style: "index.css"
-    });
-});
-
-
-
-router.get("/changepassword", (req, res) => {
-    res.render("changePassword", {
-        style: "index.css"
-    });
-});
 
 
 
