@@ -20,11 +20,32 @@ router.get("/", async (req,res) => {
     }
 })
 
+// GET para obtener la sesión actual del usuario logueado
+router.get("/current", (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ success: false, message: "No hay sesión activa" });
+  }
+
+  // devolvemos solo los campos necesarios
+  const { first_name, last_name, email, role, cartId } = req.session.user;
+
+  res.json({
+    success: true,
+    payload: {
+      first_name,
+      last_name,
+      email,
+      role,
+      cartId,
+    },
+  });
+});
+
 //GET BY ID
 router.get("/:uid", async (req,res) => {
     try {
         const userId = req.params.uid;
-        const user = await userManager.getAllUserById(userId)
+        const user = await userManager.getUserById(userId);
         if(user){
             res.send({result: "succes", payload:user})
         }else{
@@ -159,6 +180,8 @@ router.post("/changepassword", async (req, res) => {
     res.status(500).json({ success: false, message: "Error al cambiar la contraseña" });
   }
 });
+
+
 
 
 export default router;

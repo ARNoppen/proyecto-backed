@@ -8,12 +8,11 @@ export  function authMiddleware(req, res, next) {
 
 // Middleware para verificar que sea admin antes de acceder a la creación de artículos (que asume que el usuario ya está autenticado)
 export function adminMiddleware(req, res, next) {
-    if (req.session.user && req.session.user.role === "admin") {
-        return next();
-    }
-    // Renderizamos la vista de acceso denegado con un mensaje.
-    return res.status(403).render("accessDenied", { 
-        style: "index.css", 
-        message: "Solo los administradores tienen acceso." 
-    });
+  if (req.session.user && req.session.user.role === "admin") {
+    return next();
+  }
+  return res.status(403).json({
+    success: false,
+    message: "Solo los administradores tienen acceso.",
+  });
 }

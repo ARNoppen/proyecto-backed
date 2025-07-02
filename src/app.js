@@ -9,7 +9,7 @@ import session from "express-session";
 import sharedsession from "express-socket.io-session";
 import cookieParser from "cookie-parser";
 //import de nuestros otros directorios que ya exportamos
-import productsRoutes from "./routes/products.routes.js"
+import productsRoutes from "./routes/products.routes.js";
 import cartsRoutes from "./routes/carts.routes.js"
 import __dirname from "./utils.js";
 import viewRouter from "./routes/views.routes.js";
