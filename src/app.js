@@ -105,7 +105,12 @@ const httpServer = app.listen((PORT), ()=>{
 })
 
 //abrimos canal de comunicació del lado del server
-const socketServer = new Server(httpServer)
+const socketServer = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:5173", // donde corre tu frontend en desarrollo
+    credentials: true
+  }
+});
 
 // Compartir la sesión con socket.io
 socketServer.use(sharedsession(sessionMiddleware,{
