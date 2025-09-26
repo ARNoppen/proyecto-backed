@@ -1,121 +1,99 @@
 <template>
-  <div id="products-app">
-    <h1>Lista de productos</h1>
+  <div class="products-page">
+    <div class="header-buttons">
+      <!-- Botón para mostrar carrito -->
+      <router-link to="/cart">
+        <button class="primary">🛒 Mostrar carrito</button>
+      </router-link>
 
-    <ul v-if="products.length">
-      <li v-for="product in products" :key="product._id" class="product-item">
-        <p><b>{{ product.title }}</b></p>
-        <p>{{ product.description }}</p>
-        <p>Precio: {{ product.price }}</p>
+    </div>
 
-        <button @click="addProductToCart(product._id)">Agregar al carrito</button>
+    <h1>Estos son los productos creados hasta el momento:</h1>
+
+    <ul class="product-list">
+      <li v-for="product in products" :key="product._id">
+        <b>{{ product.user.first_name }} {{ product.user.last_name }}</b> creó el siguiente producto: <br>
+        Título: {{ product.title }} <br>
+        Descripción: {{ product.description }} <br>
+        Código: {{ product.code }} <br>
+        Precio: ${{ product.price }} <br>
+        Stock: {{ product.stock }} <br>
+        Categoría: {{ product.category }} <br><br>
+
+        <button @click="addToCart(product._id)">Agregar al carrito</button>
         <router-link :to="`/products/${product._id}`">
-          <button type="button">Ver detalle</button>
+          <button>Abrir producto completo</button>
         </router-link>
       </li>
     </ul>
-
-    <p v-else>No hay productos disponibles</p>
   </div>
 </template>
 
 <script>
-import { io } from 'socket.io-client'
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 export default {
-  name: 'ProductsView',
+  name: "ProductsView",
   data() {
     return {
       products: [],
-      socket: null,
-      user: null
-    }
+    };
   },
   async mounted() {
-    await this.loadProducts()
-    await this.checkSession()
+    await this.loadProducts();
   },
   methods: {
     async loadProducts() {
       try {
-        const response = await fetch('/api/products', { credentials: 'include' })
-        const result = await response.json()
-        this.products = result.payload || []
-      } catch (error) {
-        console.error('Error al obtener productos:', error)
-      }
-    },
-
-    async checkSession() {
-      try {
-        const response = await fetch('/api/users/current', { credentials: 'include' })
-        const result = await response.json()
-
-        if (result.success) {
-          this.user = result.payload
-          this.initSocket() // conectamos socket si hay sesión
+        const res = await fetch("/api/products");
+        const json = await res.json();
+        if (res.ok) {
+          this.products = json.payload;
         } else {
-          console.warn('Usuario no logueado')
+          Swal.fire("Error", json.error || "No se pudieron cargar los productos", "error");
         }
-      } catch (error) {
-        console.error('Error verificando sesión:', error)
+      } catch (e) {
+        console.error("Error cargando productos:", e);
       }
     },
-
-    initSocket() {
-      // por el proxy de Vite para /socket.io, no pasamos URL:
-      this.socket = io({
-        withCredentials: true,
-        transports: ['websocket']
-      })
-
-      this.socket.on('connect', () => {
-        console.log('Socket conectado:', this.socket.id)
-      })
-      this.socket.on('connect_error', (err) => {
-        console.error('Socket connect_error:', err.message)
-      })
-      this.socket.on('error', (err) => {
-        console.error('Socket error:', err)
-      })
-
-      this.socket.on('userData', (user) => {
-        console.log('Usuario autenticado por socket:', user)
-      })
-
-      this.socket.on('cartUpdated', (message, cart) => {
-        Swal.fire('Producto agregado', message, 'success')
-        console.log('Carrito actualizado:', cart)
-      })
-
-      this.socket.on('cartError', (errorMessage) => {
-        Swal.fire('Error', errorMessage, 'error')
-      })
+    async addToCart(productId) {
+      try {
+        const res = await fetch(`/api/carts/${this.$root.user.cartId}/product/${productId}`, {
+          method: "POST",
+          credentials: "include",
+        });
+        const json = await res.json();
+        if (res.ok) {
+          Swal.fire("Éxito", "Producto agregado al carrito", "success");
+        } else {
+          Swal.fire("Error", json.error || "No se pudo agregar al carrito", "error");
+        }
+      } catch (e) {
+        console.error("Error al agregar producto al carrito:", e);
+      }
     },
-
-    addProductToCart(productId) {
-      if (!this.user) {
-        Swal.fire('Atención', 'Tenés que iniciar sesión para agregar productos', 'warning')
-        return
-      }
-
-      if (this.socket && this.socket.connected) {
-        console.log('Emit addToCart con:', productId)
-        this.socket.emit('addToCart', { productId })
-      } else {
-        console.warn('Socket no conectado')
-        Swal.fire('Error', 'No estás conectado al servidor', 'error')
-      }
-    }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-.product-item {
-  margin-bottom: 20px;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+.header-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.primary {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+.secondary {
+  background: #6b7280;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
 }
 </style>

@@ -1,6 +1,6 @@
 const socket = io();
 
-// 🔥 Función para obtener el Cart ID desde el div oculto
+// función para obtener el Cart ID desde el div oculto
 function getCartId() {
     return document.getElementById("cart-container").getAttribute("data-cart-id");
 }

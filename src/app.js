@@ -8,12 +8,15 @@ import dotenv from "dotenv";
 import session from "express-session";
 import sharedsession from "express-socket.io-session";
 import cookieParser from "cookie-parser";
-//import de nuestros otros directorios que ya exportamos
+//import de nuestros otros directorios que ya exportamos}
+import __dirname from "./utils.js";
+
 import productsRoutes from "./routes/products.routes.js";
 import cartsRoutes from "./routes/carts.routes.js"
-import __dirname from "./utils.js";
 import viewRouter from "./routes/views.routes.js";
 import userRouter from "./routes/users.routes.js";
+import ticketsRoutes from "./routes/tickets.routes.js";
+
 import passport from "./config/passport.config.js";
 
 import { productModel } from "./dao/models/product.model.js";
@@ -21,6 +24,8 @@ import { productModel } from "./dao/models/product.model.js";
 import ProductManager from "./service/ProductManager.js";
 import UserManager from "./service/UserManager.js";
 import CartManager from "./service/CartManager.js";
+import TicketManager from "./service/TicketManager.js";
+
 
 const productManager = new ProductManager();
 const userManager = new UserManager();
@@ -94,6 +99,7 @@ app.set("view engine","handlebars");
 app.use("/api/products", productsRoutes)
 app.use("/api/carts", cartsRoutes)
 app.use("/api/users", userRouter)
+app.use("/api/tickets", ticketsRoutes)
 app.use("/", viewRouter)
 
 

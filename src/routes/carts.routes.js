@@ -10,23 +10,23 @@ const cartManager = new CartManager();
 const productManager = new ProductManager();
 const ticketManager = new TicketManager();
 
-//GET
+// GET carrito como JSON (para el frontend Vue)
 router.get("/:cid", async (req, res) => {
-    try {
-        const cartId = req.params.cid;
-        const cart = await cartManager.getCart(cartId);
-        
-        if (!cart) {
-            return res.status(404).json({ error: "Carrito no encontrado" });
-        }
-
-        res.render("cart", { cart }); //  Asegurarse de pasar "cart" al template
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: "Error interno del servidor (carts.routes.js)" });
+  try {
+    const cartId = req.params.cid;
+    const cart = await cartManager.getCart(cartId);
+    
+    if (!cart) {
+      return res.status(404).json({ success: false, error: "Carrito no encontrado" });
     }
-});
 
+    res.json({ success: true, payload: cart });
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, error: "Error interno del servidor (carts.routes.js)" });
+  }
+});
 
 
 //POST agregar carrito 
@@ -100,8 +100,8 @@ router.post("/:cid/purchase", async (req, res) => {
         // Filtramos el carrito dejando solo los que no se pudieron comprar
         await cartManager.updateCart(cartId, productosFallidos);
 
-        // Redireccionamos directamente a la vista del ticket
-        return res.redirect(`/ticket/${ticket._id}`);
+        // devolvemos JSON con el ID del ticket
+        return res.json({ success: true, ticketId: ticket._id });
 
     } catch (error) {
         console.error("Error al procesar compra:", error);
@@ -164,7 +164,7 @@ router.delete("/:cid", async (req, res) => {
             return res.status(404).json({ error: "No fue posible eliminar todos los productos del carrito." });
         }
 
-        //  emitimos `cartUpdated` para actualizar la UI en tiempo real
+        //  emitimos cartUpdated para actualizar la UI en tiempo real
         socketServer.emit("cartUpdated");
 
         res.json(deleteAllProduct);
@@ -184,7 +184,7 @@ router.delete("/:cid/product/:pid", async (req, res) => {
             return res.status(404).json({ error: "No fue posible eliminar el producto del carrito." });
         }
 
-        //  emitimos `cartUpdated` para que el frontend recargue la página
+        //  emitimos cartUpdated para que el frontend recargue la página
         socketServer.emit("cartUpdated");
 
         res.json(updatedCart);
