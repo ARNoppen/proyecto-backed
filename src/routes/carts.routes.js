@@ -1,5 +1,6 @@
 import { Router } from "express";   
 // multer import { uploader } from "../utils.js";
+import { authMiddleware } from "../middleware/auth.js";
 import CartManager from "../service/CartManager.js";
 import { socketServer } from "../app.js";
 import ProductManager from "../service/ProductManager.js";
@@ -11,7 +12,7 @@ const productManager = new ProductManager();
 const ticketManager = new TicketManager();
 
 // GET carrito como JSON (para el frontend Vue)
-router.get("/:cid", async (req, res) => {
+router.get("/:cid", authMiddleware, async (req, res) => {
   try {
     const cartId = req.params.cid;
     const cart = await cartManager.getCart(cartId);
@@ -30,7 +31,7 @@ router.get("/:cid", async (req, res) => {
 
 
 //POST agregar carrito 
-router.post("/", async (req,res) => {
+router.post("/", authMiddleware, async (req, res) => {  
     try {
         const newCart = await cartManager.addCart();
         res.status(201).json(newCart)
@@ -41,7 +42,7 @@ router.post("/", async (req,res) => {
 })
 
 //POST agregar producto al carrito 
-router.post("/:cid/product/:pid", async (req,res) => {
+router.post("/:cid/product/:pid", authMiddleware, async (req, res) => { 
     try {
         const cartId = req.params.cid;
         const productId = req.params.pid;
@@ -58,7 +59,7 @@ router.post("/:cid/product/:pid", async (req,res) => {
 })
 
 //POST realizar compra 
-router.post("/:cid/purchase", async (req, res) => {
+router.post("/:cid/purchase", authMiddleware, async (req, res) => { 
     try {
         const cartId = req.params.cid;
         const user = req.session.user;
@@ -97,10 +98,10 @@ router.post("/:cid/purchase", async (req, res) => {
             purchaser: user.email,
         });
 
-        // Filtramos el carrito dejando solo los que no se pudieron comprar
+        // Filtro el carrito dejando solo los que no se pudieron comprar
         await cartManager.updateCart(cartId, productosFallidos);
 
-        // devolvemos JSON con el ID del ticket
+        // devuelvo JSON para que Vue navegue a /tickets/:tid
         return res.json({ success: true, ticketId: ticket._id });
 
     } catch (error) {
@@ -111,7 +112,7 @@ router.post("/:cid/purchase", async (req, res) => {
 
 
 //PUT actualizar el carrito con un arreglo de productos
-router.put("/:cid", async (req,res) => {
+router.put("/:cid", authMiddleware, async (req, res) => {    
     try {
         const cartId = req.params.cid
         const updateCart = await cartManager.updateCart(cartId, req.body)
@@ -127,7 +128,7 @@ router.put("/:cid", async (req,res) => {
 })
 
 //PUT actualizar solo el quantity del producto pasado por req.body
-router.put("/:cid/products/:pid", async (req, res) => {
+router.put("/:cid/products/:pid", authMiddleware, async (req, res) => { 
     try {
         const { cid, pid } = req.params;
         let { quantity } = req.body;
@@ -155,7 +156,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
 
 
 //DELETE eliminar todos los productos del carrito
-router.delete("/:cid", async (req, res) => {
+router.delete("/:cid", authMiddleware, async (req, res) => {   
     try {
         const cartId = req.params.cid;
         const deleteAllProduct = await cartManager.deleteAllProducts(cartId);
@@ -175,7 +176,7 @@ router.delete("/:cid", async (req, res) => {
 });
 
 //DELETE eliminar del carrito, producto especifico por ID
-router.delete("/:cid/product/:pid", async (req, res) => {
+router.delete("/:cid/product/:pid", authMiddleware, async (req, res) => {
     try {
         const { cid, pid } = req.params;
         const updatedCart = await cartManager.deleteProduct(cid, pid);

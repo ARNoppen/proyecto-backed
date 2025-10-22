@@ -8,37 +8,47 @@
     <p><b>Stock:</b> {{ product.stock }}</p>
     <p><b>Categoría:</b> {{ product.category }}</p>
 
-    <div v-if="userRole === 'admin'">
-      <button v-if="!showForm" @click="showForm = true">Editar Artículo</button>
+    <!-- Bloque de acciones -->
+    <div class="actions">
+       <router-link to="/products">
+        <button class="secondary">Volver</button>
+      </router-link>
 
-      <form v-else @submit.prevent="updateProduct">
-        <label><b>Título:</b></label>
-        <input type="text" v-model="editProduct.title" />
+      <button class="primary" @click="addToCart(product._id)">Agregar al carrito</button>
 
-        <label><b>Descripción:</b></label>
-        <textarea v-model="editProduct.description"></textarea>
-
-        <label><b>Código:</b></label>
-        <input type="text" v-model="editProduct.code" />
-
-        <label><b>Precio:</b></label>
-        <input type="number" v-model="editProduct.price" />
-
-        <label><b>Stock:</b></label>
-        <input type="number" v-model="editProduct.stock" />
-
-        <label><b>Categoría:</b></label>
-        <input type="text" v-model="editProduct.category" />
-
-        <button type="submit">Guardar cambios</button>
-        <button type="button" @click="cancelEdit">Cancelar</button>
-      </form>
+      <button 
+        v-if="userRole === 'admin' && !showForm" 
+        class="primary" 
+        @click="showForm = true">
+        Editar Artículo
+      </button>
     </div>
 
-    <button @click="addToCart(product._id)">Agregar al carrito</button>
-    <router-link to="/products">
-      <button>Volver</button>
-    </router-link>
+    <!-- Formulario de edición -->
+    <form v-if="userRole === 'admin' && showForm" @submit.prevent="updateProduct">
+      <label><b>Título:</b></label>
+      <input type="text" v-model="editProduct.title" />
+
+      <label><b>Descripción:</b></label>
+      <textarea v-model="editProduct.description"></textarea>
+
+      <label><b>Código:</b></label>
+      <input type="text" v-model="editProduct.code" />
+
+      <label><b>Precio:</b></label>
+      <input type="number" v-model="editProduct.price" />
+
+      <label><b>Stock:</b></label>
+      <input type="number" v-model="editProduct.stock" />
+
+      <label><b>Categoría:</b></label>
+      <input type="text" v-model="editProduct.category" />
+
+      <div class="actions">
+        <button type="submit" class="primary">Guardar cambios</button>
+        <button type="button" class="secondary" @click="cancelEdit">Cancelar</button>
+      </div>
+    </form>
   </div>
 
   <div v-else>
@@ -58,7 +68,7 @@ export default {
       editProduct: null,
       showForm: false,
       socket: null,
-      userRole: null, // Puede venir del store o de una llamada a /api/sessions/current
+      userRole: null,
     };
   },
   async mounted() {
@@ -147,15 +157,69 @@ export default {
 
 <style scoped>
 .product-detail {
+  max-width: 600px;
+  margin: 20px auto;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
   padding: 20px;
-  border: 1px solid #ccc;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.product-detail h1 {
+  margin-bottom: 16px;
+  font-size: 1.8rem;
+  color: #111827;
+}
+
+.product-detail p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #374151;
+}
+
+.actions {
   margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Botones */
+button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+button:hover {
+  filter: brightness(1.05);
+}
+
+button.primary {
+  background: #2563eb; /* Azul */
+  color: white;
+}
+
+button.secondary {
+  background: #6b7280; /* Gris */
+  color: white;
 }
 
 form {
-  margin-top: 20px;
+  margin-top: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+input, textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 0.95rem;
 }
 </style>

@@ -1,29 +1,44 @@
 <template>
   <div class="products-page">
     <div class="header-buttons">
-      <!-- Botón para mostrar carrito -->
+      <router-link to="/">
+        <button class="secondary">🏠 Volver al Home</button>
+      </router-link>
+
+      <router-link to="/realtimeproducts">
+        <button class="primary">⚡ Cargar productos en tiempo real</button>
+      </router-link>
+
       <router-link to="/cart">
         <button class="primary">🛒 Mostrar carrito</button>
       </router-link>
-
     </div>
 
     <h1>Estos son los productos creados hasta el momento:</h1>
 
-    <ul class="product-list">
-      <li v-for="product in products" :key="product._id">
-        <b>{{ product.user.first_name }} {{ product.user.last_name }}</b> creó el siguiente producto: <br>
-        Título: {{ product.title }} <br>
-        Descripción: {{ product.description }} <br>
-        Código: {{ product.code }} <br>
-        Precio: ${{ product.price }} <br>
-        Stock: {{ product.stock }} <br>
-        Categoría: {{ product.category }} <br><br>
+    <ul class="product-grid">
+      <li v-for="product in products" :key="product._id" class="product-card">
+        <div class="product-header">
+          <span class="creator">
+            <b>{{ product.user.first_name }} {{ product.user.last_name }}</b>
+          </span>
+        </div>
 
-        <button @click="addToCart(product._id)">Agregar al carrito</button>
-        <router-link :to="`/products/${product._id}`">
-          <button>Abrir producto completo</button>
-        </router-link>
+        <div class="product-body">
+          <div class="row"><span class="label">Título:</span> <span class="value">{{ product.title }}</span></div>
+          <div class="row desc"><span class="label">Descripción:</span> <span class="value">{{ product.description }}</span></div>
+          <div class="row"><span class="label">Código:</span> <span class="value">{{ product.code }}</span></div>
+          <div class="row"><span class="label">Precio:</span> <span class="value">${{ product.price }}</span></div>
+          <div class="row"><span class="label">Stock:</span> <span class="value">{{ product.stock }}</span></div>
+          <div class="row"><span class="label">Categoría:</span> <span class="value">{{ product.category }}</span></div>
+        </div>
+
+        <div class="product-actions">
+          <button class="primary" @click="addToCart(product._id)">Agregar al carrito</button>
+          <router-link :to="`/products/${product._id}`">
+            <button class="secondary">Abrir producto completo</button>
+          </router-link>
+        </div>
       </li>
     </ul>
   </div>
@@ -77,23 +92,89 @@ export default {
 </script>
 
 <style scoped>
+/* Header */
 .header-buttons {
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
+  flex-wrap: wrap;
 }
+
+/* Grid */
+.product-grid {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Card */
+.product-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
+.product-header .creator {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.product-body .row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 8px;
+  margin: 6px 0;
+  align-items: start;
+}
+
+.product-body .row.desc .value {
+  white-space: pre-line;
+}
+
+.label {
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.value {
+  color: #111827;
+}
+
+/* Actions */
+.product-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
 .primary {
   background: #2563eb;
   color: white;
   border: none;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
+  cursor: pointer;
 }
+
 .secondary {
   background: #6b7280;
   color: white;
   border: none;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
+  cursor: pointer;
 }
+
+.primary:hover { filter: brightness(1.05); }
+.secondary:hover { filter: brightness(1.05); }
 </style>

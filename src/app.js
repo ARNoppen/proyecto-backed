@@ -1,7 +1,6 @@
 
 //hacemos el import de las librerías
 import express from "express";
-import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -13,7 +12,6 @@ import __dirname from "./utils.js";
 
 import productsRoutes from "./routes/products.routes.js";
 import cartsRoutes from "./routes/carts.routes.js"
-import viewRouter from "./routes/views.routes.js";
 import userRouter from "./routes/users.routes.js";
 import ticketsRoutes from "./routes/tickets.routes.js";
 
@@ -72,36 +70,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-// Configuración de Handlebars con el helper "eq"
-const hbs = handlebars.create({
-    runtimeOptions: {
-      allowProtoPropertiesByDefault: true,
-      allowProtoMethodsByDefault: true,
-    },
-    helpers: {
-      eq: function (a, b) {
-        return a === b;
-      },
-    },
-  });
-
-
-//-------inicializamos el motor de plantilla----------
-app.engine("handlebars",hbs.engine);
-//indicamos en que parte del proyecto estarán las vistas (Usar rutas absolutas)
-app.set("views",__dirname+"/views/");
-//para indicarle que el motor que inicializamos arriba es el que equeremos usar
-app.set("view engine","handlebars");
-
-
 
 //----------Endpoints (Rutas) que tenemos configuradas en nuestro proyecto---------
 app.use("/api/products", productsRoutes)
 app.use("/api/carts", cartsRoutes)
 app.use("/api/users", userRouter)
 app.use("/api/tickets", ticketsRoutes)
-app.use("/", viewRouter)
-
 
 
 // escucha el puerto que configuramos
