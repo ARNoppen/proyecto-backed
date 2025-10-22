@@ -52,15 +52,35 @@ export default {
   data() {
     return {
       products: [],
+      user: null,
+      loadingUser: true,
     };
   },
   async mounted() {
+    const ok = await this.loadCurrentUser();
+    if (!ok) return this.$router.push("/login");
     await this.loadProducts();
   },
   methods: {
+    async loadCurrentUser() {
+      try {
+        const res = await fetch("/api/users/current", { credentials: "include" });
+        const json = await res.json();
+        if (json.success) {
+          this.user = json.payload; // { cartId, ... }
+          this.loadingUser = false;
+          return true;
+        }
+        return false;
+      } catch (e) {
+        console.error("Error chequeando sesión:", e);
+        return false;
+      }
+    },
+
     async loadProducts() {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("/api/products", { credentials: "include" });
         const json = await res.json();
         if (res.ok) {
           this.products = json.payload;
@@ -71,13 +91,20 @@ export default {
         console.error("Error cargando productos:", e);
       }
     },
+
     async addToCart(productId) {
       try {
-        const res = await fetch(`/api/carts/${this.$root.user.cartId}/product/${productId}`, {
+        if (!this.user?.cartId) {
+          Swal.fire("Sesión requerida", "Iniciá sesión para agregar al carrito", "warning");
+          return this.$router.push("/login");
+        }
+
+        const res = await fetch(`/api/carts/${this.user.cartId}/product/${productId}`, {
           method: "POST",
           credentials: "include",
         });
         const json = await res.json();
+
         if (res.ok) {
           Swal.fire("Éxito", "Producto agregado al carrito", "success");
         } else {
@@ -85,6 +112,7 @@ export default {
         }
       } catch (e) {
         console.error("Error al agregar producto al carrito:", e);
+        Swal.fire("Error", "Ocurrió un error inesperado", "error");
       }
     },
   },
